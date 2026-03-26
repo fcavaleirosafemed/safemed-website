@@ -27,3 +27,13 @@ out/
 
 # Claude
 .claude/
+
+# Payload auto-generated
+src/app/(payload)/admin/importMap.js
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
+
+# Media uploads
+/media

@@ -1,0 +1,49 @@
+# Safemed — Software de Segurança e Saúde no Trabalho
+
+> Safemed is a Portuguese SaaS platform for occupational health and safety (OHS/SST) management. It serves companies across Portugal, offering a modular, cloud-based solution that digitizes all aspects of workplace health and safety compliance.
+
+## Company Overview
+
+Safemed develops and maintains a comprehensive occupational health and safety software platform. Founded and based in Porto, Portugal, Safemed serves hundreds of companies across multiple industries including healthcare, manufacturing, construction, aviation, and education.
+
+## Products and Modules
+
+### Core Modules
+- **Saúde no Trabalho (Occupational Health)**: Digital clinical files, fitness certificates, smart scheduling, risk mapping, digital signatures, SMS notifications
+- **Segurança no Trabalho (Workplace Safety)**: Audits, geographic route mapping, customizable reports, document management
+- **Acidentes de Trabalho (Work Accidents)**: Incident registration, investigation reports, full traceability
+
+### Additional Modules
+- **Gestão de EPI (PPE Management)**: Distribution tracking, expiry alerts, lifecycle management
+- **Produtos Químicos (Chemical Products)**: Safety Data Sheet management, exposure control, CMR classifications
+- **My Safemed (Worker Portal)**: Self-service access for workers to view documents and report incidents
+- **Easy Booking**: 100% self-service appointment scheduling with SMS/email reminders
+- **Segurança Alimentar (Food Safety)**: Visit mapping, route optimization, document management
+- **Kube (Analytics)**: Business intelligence, epidemiological studies, custom reports
+- **Quizzer (Surveys)**: Mass survey distribution, statistical analysis, automated delivery
+
+## Platform Editions
+- **Lite**: For companies with simple internal OHS management
+- **Pro**: For service providers and companies with advanced needs
+- **Gestão Interna (Internal Management)**: Complete solution for large organizations
+
+## Industries Served
+- Service Providers (external OHS companies)
+- Hospital Centers
+- Manufacturing
+- Construction
+- Civil Aviation
+- Education
+
+## Technology
+- 100% cloud-based SaaS platform
+- AI-powered assistant (Mivo) for intelligent decision support
+- GDPR compliant with end-to-end encryption
+- Multi-factor authentication
+- Available in Portuguese, English, French, and Spanish
+
+## Contact
+- Website: https://safemed.solutions
+- Email: info@safemed.solutions
+- Phone: +351 22 093 00 55
+- Address: Rua de Azevedo Coutinho 39, 4100-100 Porto, Portugal
