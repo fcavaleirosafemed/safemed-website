@@ -1,0 +1,457 @@
+{
+  "modules": [
+    {
+      "slug": "saude-trabalho",
+      "url": "https://safemed.solutions/modulos/saude-trabalho/",
+      "title": "Saude no Trabalho",
+      "subtitle": "Um software adaptado para responder a todas as necessidades de Saude do Trabalhado e dos seus trabalhadores.",
+      "heroImage": "https://safemed.solutions/wp-content/uploads/2023/11/14466922893_c3cf1124cb_b.jpg",
+      "description": "A saude no trabalho tem como objetivo salvaguardar o bem-estar global dos trabalhadores, abordando fatores fisicos, mentais e sociais no ambiente laboral. Procura tambem identificar e mitigar riscos ocupacionais, promovendo praticas seguras e melhorando as condicoes de trabalho para prevenir doencas e lesoes relacionadas com o trabalho.",
+      "features": [
+        {
+          "title": "Ficha Clinica Parametrizavel",
+          "description": "Todo o processo clinico do trabalhador num unico local, de forma dinamica. O Safemed permite a parametrizacao da Ficha Clinica consoante as necessidades do corpo clinico."
+        },
+        {
+          "title": "Ficha de Aptidao Digital",
+          "description": "Acabe com o papel digitalizando na totalidade a ficha de aptidao para o trabalho. Todo o preenchimento e feito de forma digital, permitindo a recolha de assinatura dos diversos intervenientes. O trabalhador pode, sem intervencao de terceiros, ter uma senha de acesso e extrair a sua ficha de aptidao de forma totalmente digital."
+        },
+        {
+          "title": "Agendamentos",
+          "description": "Com o Safemed, as ficha de aptidao expiradas deixam de ser uma realidade. O Safemed ajuda no controlo dos agendamentos a efetuar, alertando para os agendamentos a efetuar e quando, convocando os trabalhadores ou responsaveis por e-mail ou SMS automatizado."
+        },
+        {
+          "title": "Gestao de Calendarios de Medicos e Enfermeiros",
+          "description": "Faca a gestao dos calendarios dos profissionais de saude, registando quando tem disponibilidade para agendamentos. E possivel perceber qual a disponibilidade dos profissionais para que exista uma gestao mais eficiente de todos os agendamentos."
+        },
+        {
+          "title": "Riscos por Posto de Trabalho",
+          "description": "O Safemed permite uma visao imediata dos riscos a que o trabalhador esta exposto, transpondo os mesmos automaticamente para a ficha de aptidao, Identifique os riscos a quais o trabalhador esta constantemente exposto no seu local de trabalho, estando esta informacao disponivel para o medico do trabalho, tecnico de seguranca e trabalhador."
+        },
+        {
+          "title": "Historico de Consultas",
+          "description": "Perceba todas as consultas e exames que foram executados num determinado periodo, por quem e qual o seu resultado. Todo o acompanhamento da atividade passa a ser possivel de forma rapida e direta."
+        },
+        {
+          "title": "Assinatura Digital Certificada",
+          "description": "Acabe com as fichas de aptidao e documentos em papel. O Safemed permite assinatura com cartao de cidadao, cartao da Ordem dos Medicos e mesas digitalizadoras de assinaturas."
+        },
+        {
+          "title": "Notificacao por SMS",
+          "description": "Com esta funcionalidade pode enviar, com apenas um clique, um SMS a todos os trabalhadores com consulta/exames agendados. E tambem possivel o envio de lembretes de agendamentos ja efetuados."
+        },
+        {
+          "title": "Declaracoes de Presenca",
+          "description": "A funcionalidade declaracoes de presenca permite emitir um documento com um formato editavel, que contem a hora de chegada e de saida do trabalhador no local."
+        }
+      ],
+      "cta": {
+        "heading": "Peca uma demonstracao hoje mesmo!",
+        "subtext": "E descubra todas as potencialidades do Safemed para a sua empresa!",
+        "formPortalId": "48829061",
+        "formId": "2e15006b-cf2b-4914-bb41-9f97e123b34e"
+      },
+      "images": [
+        "https://safemed.solutions/wp-content/uploads/2023/11/14466922893_c3cf1124cb_b.jpg",
+        "https://safemed.solutions/wp-content/uploads/2024/03/safemed_170.png"
+      ]
+    },
+    {
+      "slug": "seguranca-trabalho",
+      "url": "https://safemed.solutions/modulos/seguranca-trabalho/",
+      "title": "Seguranca no Trabalho",
+      "subtitle": "Um software dinamico para dar resposta as maiores necessidades de Seguranca do Trabalho na sua empresa.",
+      "heroImage": null,
+      "description": "A seguranca no trabalho visa identificar, avaliar e controlar riscos que possam causar acidentes, lesoes ou danos a saude dos trabalhadores. Atraves de normas, procedimentos e formacao, cria ambientes de trabalho mais seguros e promove uma cultura organizacional focada na seguranca.",
+      "features": [
+        {
+          "title": "Gestao de Auditorias",
+          "description": "Controlo de auditorias e do plano anual de atividades a executar de acordo com as caracteristicas cada empresa. Auditorias de avaliacao de risco, conformidades, avaliacao de maquinas e muitos outros tipos, sempre em dia e geridas atraves do mecanismo inteligente de agendamento e gestao de calendarizacao."
+        },
+        {
+          "title": "Agendamentos",
+          "description": "Alerta para convocatorias a executar de acordo com as regras legais e especificas estabelecidas. Mecanismo inteligente da gestao de agendamentos por drag&drop, que permite agendar facilmente qualquer tipo de consulta/exame por medico, enfermeiro ou disponibilidade de sala."
+        },
+        {
+          "title": "Mapa com localizacao geografica de Visitas",
+          "description": "A utilizacao de uma rota de visitas a efetuar permite-lhe poupar tempo e dinheiro. Visualize facilmente todos os agendamentos para determinado dia e deixe que o Safemed lhe diga qual a rota mais eficaz."
+        },
+        {
+          "title": "Relatorios Parametrizaveis",
+          "description": "Sistematize os relatorios de risco, conformidade e outros relatorios consoante os objetivos e necessidades da sua empresa. Decida quais os campos que deseja incluir e visualize os dados em tempo real."
+        },
+        {
+          "title": "Notificacao de marcacao de visitas e auditorias",
+          "description": "Saiba que atividades desempenhar, quando e onde. Notificacoes automaticas de marcacao de auditorias, para uma melhor gestao da agenda de Tecnicos de Seguranca do Trabalho."
+        },
+        {
+          "title": "Anexacao de Documentos",
+          "description": "Com o Safemed armazene e organize toda a documentacao de Seguranca da empresa de forma intuitiva e preservando o ambiente. Pode anexar todos os documentos das empresas e disponibilizar os mesmos quando for necessario, diretamente a partir do sistema."
+        },
+        {
+          "title": "Gestao de EPI",
+          "description": "Gestao de atribuicao de EPI pelos trabalhadores. Relacao entre EPI, Posto de Trabalho, Tarefa. Gestao de EPI por tipo, familia e sub-familia. Producao de documento de rececao de EPI com possibilidade de assinatura."
+        },
+        {
+          "title": "Gestao de Acidentes de Trabalho",
+          "description": "Caracterizacao de acidente de Trabalho. Registo de incidentes de Trabalho. Fluxos de aprovacao de registo. Producao de Relatorio de acidente de Trabalho. Possibilidade de registo de incidente pelo cliente, trabalhador ou por um responsavel."
+        },
+        {
+          "title": "Gestao de Medidas de Auto Protecao",
+          "description": "Criacao do plano de medidas de autoprotecao. Criacao de registos dinamicos de varios tipos. Acompanhamento das medidas de autoprotecao. Registo de vistorias, formacoes, simulacros."
+        }
+      ],
+      "cta": {
+        "heading": "Peca uma demonstracao hoje mesmo!",
+        "subtext": "E descubra todas as potencialidades do Safemed para a sua empresa!",
+        "formPortalId": "48829061",
+        "formId": "2e15006b-cf2b-4914-bb41-9f97e123b34e"
+      },
+      "images": [
+        "https://safemed.solutions/wp-content/uploads/2024/03/safemed_170.png"
+      ]
+    },
+    {
+      "slug": "acidentes-trabalho",
+      "url": "https://safemed.solutions/modulos/acidentes-trabalho/",
+      "title": "Acidentes de Trabalho",
+      "subtitle": "Gestao dos acidentes de forma facil e eficaz",
+      "heroImage": "https://safemed.solutions/wp-content/uploads/2025/01/Acidente-Trabalho.jpg",
+      "description": "O modulo de acidentes de trabalho do Safemed e uma ferramenta robusta e intuitiva que permite a gestao eficaz de registos e analise de incidentes no local de trabalho. Inclui documentacao detalhada, edicao de dados, rastreabilidade de alteracoes e geracao de relatorios personalizados, facilitando o acompanhamento e a implementacao de medidas preventivas enquanto se integra com outros modulos.",
+      "features": [
+        {
+          "title": "Registo Completo de Acidentes",
+          "description": "Documentacao detalhada de cada incidente, incluindo data, local e descricao, alem de campos adicionais para futuro tratamento estatistico."
+        },
+        {
+          "title": "Edicao e Atualizacoes",
+          "description": "Permite alteracoes a registos existentes e acompanhamento por diversos intervenientes, garantindo a precisao da informacao."
+        },
+        {
+          "title": "Relatorios de Investigacao Personalizados",
+          "description": "Geracao de relatorios de investigacao de acidentes e documentacao relevante para acompanhamento de participacoes."
+        },
+        {
+          "title": "Integracao com Outros Modulos",
+          "description": "Ligacao direta com ferramentas de seguranca e saude, garantindo uma gestao centralizada e eficiente de todos os processos."
+        }
+      ],
+      "cta": {
+        "heading": "Peca uma demonstracao hoje mesmo!",
+        "subtext": "E descubra todas as potencialidades do Safemed para a sua empresa!",
+        "formPortalId": "48829061",
+        "formId": "2e15006b-cf2b-4914-bb41-9f97e123b34e"
+      },
+      "images": [
+        "https://safemed.solutions/wp-content/uploads/2025/01/Acidente-Trabalho.jpg",
+        "https://safemed.solutions/wp-content/uploads/2024/03/safemed_logo.png",
+        "https://safemed.solutions/wp-content/uploads/2024/03/safemed_170.png"
+      ]
+    },
+    {
+      "slug": "gestao-epi",
+      "url": "https://safemed.solutions/modulos/gestao-epi/",
+      "title": "Gestao de EPI",
+      "subtitle": "A gestao de atribuicoes mais facil e integrada",
+      "heroImage": "https://safemed.solutions/wp-content/uploads/2025/01/Safemed-Gestao-de-equipamentos-de-protecao-EPI.jpg",
+      "description": "O modulo permite as organizacoes registar, monitorizar e controlar a distribuicao de EPIs, garantindo que os trabalhadores tenham o equipamento adequado. Oferece alertas para renovacao/substituicao, assegura conformidade legal e reduz desperdicios atraves do acompanhamento do ciclo de vida.",
+      "features": [
+        {
+          "title": "Rastreabilidade Completa",
+          "description": "Registo detalhado da distribuicao e uso de EPIs por trabalhador."
+        },
+        {
+          "title": "Alertas Automaticos",
+          "description": "Notificacoes para substituicao ou renovacao de EPIs vencidos."
+        },
+        {
+          "title": "Integracao com restantes processos de seguranca e saude",
+          "description": "Ligacao com os restantes processos do Safemed para uma gestao centralizada."
+        },
+        {
+          "title": "Otimizacao de Recursos",
+          "description": "Gestao eficiente para evitar desperdicios e assegurar a disponibilidade de EPIs."
+        }
+      ],
+      "cta": {
+        "heading": "Peca uma demonstracao hoje mesmo!",
+        "subtext": "E descubra todas as potencialidades do Safemed para a sua empresa!",
+        "formPortalId": "48829061",
+        "formId": "2e15006b-cf2b-4914-bb41-9f97e123b34e"
+      },
+      "images": [
+        "https://safemed.solutions/wp-content/uploads/2025/01/Safemed-Gestao-de-equipamentos-de-protecao-EPI.jpg",
+        "https://safemed.solutions/wp-content/uploads/2024/03/safemed_logo.png",
+        "https://safemed.solutions/wp-content/uploads/2024/03/safemed_170.png"
+      ]
+    },
+    {
+      "slug": "produtos-quimicos",
+      "url": "https://safemed.solutions/modulos/produtos-quimicos/",
+      "title": "Produtos Quimicos",
+      "subtitle": "Gestao de produtos quimicos de forma integrada e dinamica",
+      "heroImage": "https://safemed.solutions/wp-content/uploads/2025/01/Safemed-gestao-de-produtos-quimicos.jpg",
+      "description": "O modulo de gestao de produtos quimicos do Safemed e uma ferramenta essencial para garantir a seguranca e conformidade na manipulacao de substancias perigosas. Com funcionalidades avancadas, permite o registo e catalogacao detalhada de produtos, gestao e criacao de fichas de seguranca (FDS) e controlo de exposicao dos trabalhadores, garantindo total acompanhamento de situacoes perigosas. Alem disso, oferece a possibilidade de caracterizacao dos produtos e alertas para revisao de fichas e validade de produtos, promovendo um ambiente de trabalho mais seguro e eficiente. Este modulo integra-se perfeitamente com outras areas do Safemed, assegurando uma abordagem centralizada e eficaz na gestao de seguranca quimica.",
+      "features": [
+        {
+          "title": "Registo Detalhado",
+          "description": "Catalogacao completa de produtos quimicos com informacoes essenciais e respetivas fichas de seguranca."
+        },
+        {
+          "title": "Alertas Automaticos",
+          "description": "Notificacoes para revisoes de fichas, validade de produtos e requisitos legais."
+        },
+        {
+          "title": "Controlo de Exposicao",
+          "description": "Relacao entre produto quimico e substancias perigosas (como CMR) com o posto de trabalho, funcao e trabalhador."
+        },
+        {
+          "title": "Integracao Centralizada",
+          "description": "Ligacao direta com outros modulos do Safemed para uma gestao global e eficiente."
+        }
+      ],
+      "cta": {
+        "heading": "Peca uma demonstracao hoje mesmo!",
+        "subtext": "E descubra todas as potencialidades do Safemed para a sua empresa!",
+        "formPortalId": "48829061",
+        "formId": "2e15006b-cf2b-4914-bb41-9f97e123b34e"
+      },
+      "images": [
+        "https://safemed.solutions/wp-content/uploads/2025/01/Safemed-gestao-de-produtos-quimicos.jpg",
+        "https://safemed.solutions/wp-content/uploads/2024/03/safemed_logo.png",
+        "https://safemed.solutions/wp-content/uploads/2024/03/safemed_170.png"
+      ]
+    },
+    {
+      "slug": "my-safemed",
+      "url": "https://safemed.solutions/modulos/my-safemed/",
+      "title": "My Safemed",
+      "subtitle": "Toda a informacao na mao dos trabalhadores",
+      "heroImage": "https://safemed.solutions/wp-content/uploads/2025/01/medium-shot-woman-sitting-desk.jpg",
+      "description": "O portal My Safemed e uma plataforma intuitiva e acessivel, projetada para envolver diretamente os colaboradores na gestao da sua seguranca e saude no trabalho. Esta plataforma permite que cada trabalhador aceda a informacoes importantes, como fichas de aptidao, agendamento de consultas, historico de exames e alertas personalizados. Alem disso, facilita a comunicacao com a empresa, oferecendo ferramentas para reportar incidentes, consultar documentos e notificacoes. Com foco na transparencia e na capacitacao dos trabalhadores, o portal promove uma maior responsabilidade individual e reforca o compromisso da organizacao com o bem-estar da sua equipa.",
+      "features": [
+        {
+          "title": "Acesso Personalizado",
+          "description": "Consulta de fichas de aptidao, historico de exames e pedidos de agendamento diretamente pelo trabalhador."
+        },
+        {
+          "title": "Comunicacao Simplificada",
+          "description": "Ferramentas para reportar incidentes e consultar documentos relevantes de forma pratica."
+        },
+        {
+          "title": "Consulta dos Riscos",
+          "description": "Visualizacao dos riscos associados ao posto de trabalho e medidas preventivas recomendadas."
+        },
+        {
+          "title": "Capacitacao e Transparencia",
+          "description": "Promove maior envolvimento e responsabilidade dos trabalhadores na gestao da sua seguranca e saude."
+        }
+      ],
+      "cta": {
+        "heading": "Peca uma demonstracao hoje mesmo!",
+        "subtext": "E descubra todas as potencialidades do Safemed para a sua empresa!",
+        "formPortalId": "48829061",
+        "formId": "2e15006b-cf2b-4914-bb41-9f97e123b34e"
+      },
+      "images": [
+        "https://safemed.solutions/wp-content/uploads/2025/01/medium-shot-woman-sitting-desk.jpg",
+        "https://safemed.solutions/wp-content/uploads/2024/03/safemed_logo.png",
+        "https://safemed.solutions/wp-content/uploads/2024/03/safemed_170.png"
+      ]
+    },
+    {
+      "slug": "easy-booking",
+      "url": "https://safemed.solutions/modulos/easy-booking/",
+      "title": "Easy Booking",
+      "subtitle": "Uma solucao de auto-agendamento que revoluciona a gestao dos exames de saude no trabalho",
+      "heroImage": "https://safemed.solutions/wp-content/uploads/2025/01/easy-booking-header.png",
+      "description": "O Easy Booking do Safemed e uma solucao inovadora que simplifica o processo de agendamento de consultas, exames e outros eventos. Com uma interface intuitiva, permite gerir marcacoes de forma rapida e eficiente, integrando horarios de profissionais, salas e recursos disponiveis. Alem disso, oferece notificacoes automatizadas para lembretes e confirmacoes de acordo com as obrigatoriedades legais, garantindo uma comunicacao clara entre a organizacao e os trabalhadores. Com foco na praticidade e na otimizacao de tempo, o Easy Booking transforma a gestao de agendamentos numa experiencia fluida e confiavel.",
+      "features": [
+        {
+          "title": "Agendamento Simplificado",
+          "description": "Interface intuitivo para marcar consultas e exames em poucos cliques."
+        },
+        {
+          "title": "Gestao de Disponibilidades",
+          "description": "Integracao com horarios de profissionais e salas para otimizar recursos."
+        },
+        {
+          "title": "Notificacoes Automatizadas",
+          "description": "Lembretes por email ou SMS para confirmar ou alterar agendamentos, relembrando a altura indicada para agendar exame."
+        },
+        {
+          "title": "Acompanhamento em Tempo Real",
+          "description": "Atualizacoes instantaneas sobre marcacoes e estados de eventos."
+        }
+      ],
+      "cta": {
+        "heading": "Peca uma demonstracao hoje mesmo!",
+        "subtext": "E descubra todas as potencialidades do Safemed para a sua empresa!",
+        "formPortalId": "48829061",
+        "formId": "2e15006b-cf2b-4914-bb41-9f97e123b34e"
+      },
+      "images": [
+        "https://safemed.solutions/wp-content/uploads/2025/01/easy-booking-header.png",
+        "https://safemed.solutions/wp-content/uploads/2024/03/safemed_logo.png",
+        "https://safemed.solutions/wp-content/uploads/2024/03/safemed_170.png"
+      ]
+    },
+    {
+      "slug": "seguranca-alimentar",
+      "url": "https://safemed.solutions/modulos/seguranca-alimentar/",
+      "title": "Seguranca Alimentar",
+      "subtitle": "Um software adaptado para responder a todas as necessidades de Seguranca Alimentar dos seus clientes.",
+      "heroImage": "https://safemed.solutions/wp-content/uploads/2023/11/Industria-Alimentar.jpg",
+      "description": "A seguranca alimentar abrange praticas desde a producao ate ao consumo, com enfase em controlos de higiene, analise de riscos e conformidade regulamentar.",
+      "features": [
+        {
+          "title": "Agendamentos",
+          "description": "Gestao de todos os agendamentos relacionados com seguranca alimentar."
+        },
+        {
+          "title": "Mapa de Visitas",
+          "description": "A utilizacao de uma rota de visitas a efetuar permite-lhe poupar tempo e dinheiro. Visualize facilmente todos os agendamentos para determinado dia e deixe que o Safemed lhe diga qual a rota mais eficaz."
+        },
+        {
+          "title": "Gestao de Visitas fora de Rota",
+          "description": "Mecanismo inteligente de auto-sugestao para visitas nao agendadas dentro de rotas existentes."
+        },
+        {
+          "title": "Notificacao de marcacao de visitas",
+          "description": "Notificacoes automaticas de marcacao de visitas, para uma melhor gestao da agenda."
+        },
+        {
+          "title": "Anexacao de Documentos",
+          "description": "Com o Safemed aceda a todos os documentos do cliente de forma facil, intuitiva e preservando o ambiente."
+        },
+        {
+          "title": "Historico de Visitas",
+          "description": "Analise de dados de visitas anteriores de seguranca alimentar, mostrando alteracoes de valores e acompanhamento de melhorias."
+        }
+      ],
+      "cta": {
+        "heading": "Peca uma demonstracao hoje mesmo!",
+        "subtext": "E descubra todas as potencialidades do Safemed para a sua empresa!",
+        "formPortalId": "48829061",
+        "formId": "2e15006b-cf2b-4914-bb41-9f97e123b34e"
+      },
+      "images": [
+        "https://safemed.solutions/wp-content/uploads/2023/11/Industria-Alimentar.jpg",
+        "https://safemed.solutions/wp-content/uploads/2019/10/img-b-006.jpg",
+        "https://safemed.solutions/wp-content/uploads/2024/03/safemed_logo.png",
+        "https://safemed.solutions/wp-content/uploads/2024/03/safemed_170.png"
+      ]
+    },
+    {
+      "slug": "kube",
+      "url": "https://safemed.solutions/modulos/kube/",
+      "title": "Kube",
+      "subtitle": "Recolha e Tratamento dos dados dos trabalhadores",
+      "heroImage": "https://safemed.solutions/wp-content/uploads/2023/11/Kube.jpg",
+      "description": "O KUBE e uma ferramenta cloud para recolha e tratamento de dados dos trabalhadores.",
+      "features": [
+        {
+          "title": "Historico detalhado de operacoes",
+          "description": "O que foi feito? Por quem? A execucao corresponde com o forecast?"
+        },
+        {
+          "title": "Planeamento simples",
+          "description": "Onde esta o maior atraso na execucao de servicos? Quais os distritos/clientes/segmentos mais afetados?"
+        },
+        {
+          "title": "Estudos Epidemologicos",
+          "description": "Analise detalhada de comportamentos de risco por cliente."
+        },
+        {
+          "title": "Familia Safemed",
+          "description": "Mesmo login, mesma fonte de dados."
+        },
+        {
+          "title": "Integracao",
+          "description": "Possibilidade de integracao com outras ferramentas."
+        },
+        {
+          "title": "Relatorios",
+          "description": "Desenvolvimento rapido de novos reports."
+        },
+        {
+          "title": "Sistema de Filtros",
+          "description": "Possibilidade de combinacao de inumeros filtros."
+        }
+      ],
+      "additionalBenefits": [
+        "Analise detalhada dos dados",
+        "Estudos clinicos simplificados",
+        "Extracao simples de relatorios de gestao",
+        "Metricas sobre acidentes de trabalho, empregos, analise de rentabilidade",
+        "Execucao de atividades",
+        "Aplicacao de multiplos filtros"
+      ],
+      "cta": null,
+      "images": [
+        "https://safemed.solutions/wp-content/uploads/2023/11/Kube.jpg",
+        "https://safemed.solutions/wp-content/uploads/2023/11/kube_1-300x131.png",
+        "https://safemed.solutions/wp-content/uploads/2024/03/safemed_170.png"
+      ]
+    },
+    {
+      "slug": "quizzer",
+      "url": "https://safemed.solutions/modulos/quizzer/",
+      "title": "Quizzer",
+      "subtitle": "Ferramenta de Questionarios",
+      "heroImage": null,
+      "description": "O Quizzer e um addon do Safemed que permite o envio de questionarios em massa para os trabalhadores e efetuar o respetivo tratamento de respostas.",
+      "features": [
+        {
+          "title": "Questionarios Dinamicos",
+          "description": "Crie os questionarios a sua medida, com todos os tipos de campos criados de forma dinamica."
+        },
+        {
+          "title": "Tratamento estatistico de respostas",
+          "description": "Faca o tratamento estatistico das respostas aos questionarios, obtendo as respostas organizadas e elementos graficos para ajudar na sua analise."
+        },
+        {
+          "title": "Consulta aos trabalhadores",
+          "description": "Crie anualmente formularios de consulta aos trabalhadores, disponibilizando-os automaticamente aos trabalhadores atraves de email."
+        },
+        {
+          "title": "Envio automatizado dos questionarios",
+          "description": "Com a integracao direta com a base de dados Safemed, os questionarios podem ser disponibilizados aos trabalhadores de forma automatica."
+        }
+      ],
+      "cta": {
+        "heading": "Peca uma demonstracao hoje mesmo!",
+        "subtext": "E descubra todas as potencialidades do Safemed para a sua empresa!",
+        "formPortalId": "48829061",
+        "formId": "2e15006b-cf2b-4914-bb41-9f97e123b34e"
+      },
+      "images": [
+        "https://safemed.solutions/wp-content/uploads/2023/11/quizzer.png",
+        "https://safemed.solutions/wp-content/uploads/2024/03/safemed_170.png"
+      ]
+    }
+  ],
+  "global": {
+    "logo": "https://safemed.solutions/wp-content/uploads/2024/03/safemed_170.png",
+    "footerLogo": "https://safemed.solutions/wp-content/uploads/2024/03/safemed_logo.png",
+    "tagline": "Software de Seguranca e Saude do Trabalho",
+    "contactEmail": "info@safemed.solutions",
+    "social": {
+      "facebook": "https://www.facebook.com/blogsafemed/",
+      "linkedin": "https://www.linkedin.com/company/safemed-solution/",
+      "youtube": "https://www.youtube.com/channel/UCtJXzs597RRr_3kS-qhitPA"
+    },
+    "footerLinks": {
+      "software": "https://safemed.solutions/safemed/",
+      "industrias": "https://safemed.solutions/industrias/industria/",
+      "noticias": "https://safemed.solutions/noticias/",
+      "contactos": "https://safemed.solutions/contactos/",
+      "newsletter": "https://safemed.solutions/newsletter/",
+      "safenews": "https://www.linkedin.com/newsletters/safenews-7207464621484519425/",
+      "blog": "https://blog.safemed.pt/"
+    },
+    "languages": ["PT", "EN", "FR", "ES"],
+    "hubspotPortalId": "48829061",
+    "hubspotFormId": "2e15006b-cf2b-4914-bb41-9f97e123b34e"
+  }
+}

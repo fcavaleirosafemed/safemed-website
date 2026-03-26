@@ -1,6 +1,6 @@
 'use client'
 
-import { motion } from 'framer-motion'
+import { useState, useEffect } from 'react'
 import { Star, Quote } from 'lucide-react'
 
 const testimonials = [
@@ -28,30 +28,59 @@ const testimonials = [
 ]
 
 export function TestimonialsSection() {
+  const [headerRef, setHeaderRef] = useState<HTMLElement | null>(null)
+  const [headerVisible, setHeaderVisible] = useState(false)
+  useEffect(() => {
+    if (!headerRef) return
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) setHeaderVisible(true) },
+      { threshold: 0.1 }
+    )
+    observer.observe(headerRef)
+    return () => observer.disconnect()
+  }, [headerRef])
+
+  const [gridRef, setGridRef] = useState<HTMLElement | null>(null)
+  const [gridVisible, setGridVisible] = useState(false)
+  useEffect(() => {
+    if (!gridRef) return
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) setGridVisible(true) },
+      { threshold: 0.1 }
+    )
+    observer.observe(gridRef)
+    return () => observer.disconnect()
+  }, [gridRef])
+
   return (
-    <section className="py-24 lg:py-32 bg-surface-50/50">
+    <section className="py-24 lg:py-32 bg-surface-50">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-100px' }}
+        <div
+          ref={setHeaderRef}
           className="text-center mb-16"
+          style={{
+            opacity: headerVisible ? 1 : 0,
+            transform: headerVisible ? 'translateY(0)' : 'translateY(20px)',
+            transition: 'all 700ms cubic-bezier(0.22,1,0.36,1)',
+          }}
         >
           <span className="text-sm font-semibold text-safemed-600 tracking-wide uppercase">Testemunhos</span>
           <h2 className="mt-3 text-3xl lg:text-4xl font-display font-bold tracking-tight text-surface-950">
             O que dizem os nossos clientes
           </h2>
-        </motion.div>
+        </div>
 
-        <div className="grid md:grid-cols-3 gap-6">
+        <div ref={setGridRef} className="grid md:grid-cols-3 gap-6">
           {testimonials.map((t, i) => (
-            <motion.div
+            <div
               key={t.name}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.1 }}
-              className="bg-white rounded-2xl p-8 border border-surface-100 hover:shadow-lg transition-shadow relative"
+              className="bg-white rounded-2xl p-8 border border-surface-200 hover:border-surface-300 transition-colors relative"
+              style={{
+                opacity: gridVisible ? 1 : 0,
+                transform: gridVisible ? 'translateY(0)' : 'translateY(20px)',
+                transition: 'all 700ms cubic-bezier(0.22,1,0.36,1)',
+                transitionDelay: `${i * 100}ms`,
+              }}
             >
               <Quote className="absolute top-6 right-6 w-8 h-8 text-safemed-100" />
 
@@ -75,7 +104,7 @@ export function TestimonialsSection() {
                   <div className="text-xs text-surface-500">{t.role} — {t.company}</div>
                 </div>
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
       </div>

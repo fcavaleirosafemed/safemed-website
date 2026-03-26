@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
+import { SafemedLogo } from '@/components/ui/SafemedLogo'
 import {
   ChevronDown,
   Menu,
@@ -60,26 +61,18 @@ export function Header() {
 
   return (
     <>
-      <motion.header
+      <header
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
           scrolled
-            ? 'glass shadow-lg shadow-black/[0.03]'
-            : 'bg-transparent'
+            ? 'bg-white/95 backdrop-blur-xl shadow-lg shadow-black/[0.03]'
+            : 'bg-white/80 backdrop-blur-md'
         }`}
-        initial={{ y: -100 }}
-        animate={{ y: 0 }}
-        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
       >
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="flex items-center justify-between h-20">
             {/* Logo */}
-            <Link href="/" className="flex items-center gap-3 group">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-safemed-600 to-safemed-400 flex items-center justify-center shadow-lg shadow-safemed-600/20 group-hover:shadow-safemed-600/40 transition-shadow">
-                <Shield className="w-5 h-5 text-white" />
-              </div>
-              <span className="text-xl font-display font-bold text-surface-900 tracking-tight">
-                safe<span className="text-safemed-600">med</span>
-              </span>
+            <Link href="/" className="flex items-center group">
+              <SafemedLogo className="h-9 w-auto" />
             </Link>
 
             {/* Desktop Nav */}
@@ -198,7 +191,7 @@ export function Header() {
             </div>
           </div>
         </div>
-      </motion.header>
+      </header>
 
       {/* Mobile Menu */}
       <AnimatePresence>

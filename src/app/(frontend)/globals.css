@@ -1,4 +1,4 @@
-@import "tailwindcss";
+@import "tailwindcss" layer(frontend);
 
 @theme {
   --color-safemed-50: #eef8ff;
@@ -82,6 +82,22 @@ html {
   box-shadow:
     0 0 20px rgba(28, 128, 174, 0.15),
     0 0 60px rgba(28, 128, 174, 0.05);
+}
+
+/* Entrance animations */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeInRight {
+  from { opacity: 0; transform: translateX(40px) scale(0.95); }
+  to { opacity: 1; transform: translateX(0) scale(1); }
+}
+.animate-fade-in-up {
+  animation: fadeInUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.animate-fade-in-right {
+  animation: fadeInRight 1s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 /* Noise texture overlay */

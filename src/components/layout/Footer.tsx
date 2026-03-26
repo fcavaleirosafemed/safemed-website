@@ -1,7 +1,8 @@
 'use client'
 
 import Link from 'next/link'
-import { Shield, Mail, Phone, MapPin, Linkedin, ArrowUpRight } from 'lucide-react'
+import { SafemedLogo } from '@/components/ui/SafemedLogo'
+import { Mail, Phone, MapPin, Linkedin, ArrowUpRight } from 'lucide-react'
 
 const footerLinks = {
   modulos: [
@@ -61,13 +62,8 @@ export function Footer() {
         {/* Links Grid */}
         <div className="py-16 grid grid-cols-2 md:grid-cols-4 gap-12">
           <div className="col-span-2 md:col-span-1">
-            <Link href="/" className="flex items-center gap-3 mb-6">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-safemed-600 to-safemed-400 flex items-center justify-center">
-                <Shield className="w-5 h-5 text-white" />
-              </div>
-              <span className="text-xl font-display font-bold tracking-tight">
-                safe<span className="text-safemed-400">med</span>
-              </span>
+            <Link href="/" className="flex items-center mb-6">
+              <SafemedLogo className="h-8 w-auto" color="#ffffff" />
             </Link>
             <p className="text-sm text-surface-200/50 leading-relaxed mb-6">
               Software líder em segurança e saúde ocupacional em Portugal.

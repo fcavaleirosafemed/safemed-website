@@ -1,6 +1,5 @@
 'use client'
 
-import { motion, useMotionValue, useTransform, animate } from 'framer-motion'
 import { useEffect, useRef, useState } from 'react'
 
 const stats = [
@@ -49,19 +48,34 @@ function AnimatedCounter({ value, suffix, label }: { value: number; suffix: stri
 }
 
 export function StatsSection() {
+  const [ref, setRef] = useState<HTMLElement | null>(null)
+  const [visible, setVisible] = useState(false)
+  useEffect(() => {
+    if (!ref) return
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) setVisible(true) },
+      { threshold: 0.1 }
+    )
+    observer.observe(ref)
+    return () => observer.disconnect()
+  }, [ref])
+
   return (
-    <section className="py-24 bg-surface-50/50">
+    <section className="py-24 bg-white">
       <div className="max-w-5xl mx-auto px-6 lg:px-8">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+        <div
+          ref={setRef}
           className="grid grid-cols-2 lg:grid-cols-4 gap-12"
+          style={{
+            opacity: visible ? 1 : 0,
+            transform: visible ? 'translateY(0)' : 'translateY(20px)',
+            transition: 'all 700ms cubic-bezier(0.22,1,0.36,1)',
+          }}
         >
           {stats.map((stat) => (
             <AnimatedCounter key={stat.label} {...stat} />
           ))}
-        </motion.div>
+        </div>
       </div>
     </section>
   )

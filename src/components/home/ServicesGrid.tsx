@@ -1,6 +1,6 @@
 'use client'
 
-import { motion } from 'framer-motion'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import {
   Heart,
@@ -81,29 +81,23 @@ const services = [
   },
 ]
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.06 },
-  },
-}
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 24 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } },
-}
-
 export function ServicesGrid() {
+  const [visible, setVisible] = useState(false)
+
+  useEffect(() => {
+    setTimeout(() => setVisible(true), 100)
+  }, [])
+
   return (
-    <section className="py-24 lg:py-32 relative">
+    <section className="py-24 lg:py-32 bg-white">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         {/* Section header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: 0.6 }}
+        <div
+          style={{
+            opacity: visible ? 1 : 0,
+            transform: visible ? 'translateY(0)' : 'translateY(20px)',
+            transition: 'all 700ms cubic-bezier(0.22, 1, 0.36, 1)',
+          }}
           className="max-w-2xl mb-16"
         >
           <span className="text-sm font-semibold text-safemed-600 tracking-wide uppercase">
@@ -117,24 +111,26 @@ export function ServicesGrid() {
           <p className="mt-4 text-lg text-surface-500 leading-relaxed">
             Cada módulo funciona de forma independente mas integra-se perfeitamente com os restantes. Escolha apenas o que precisa.
           </p>
-        </motion.div>
+        </div>
 
         {/* Grid */}
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: '-100px' }}
-          className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4"
-        >
-          {services.map((service) => (
-            <motion.div key={service.href} variants={itemVariants}>
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+          {services.map((service, index) => (
+            <div
+              key={service.href}
+              style={{
+                opacity: visible ? 1 : 0,
+                transform: visible ? 'translateY(0)' : 'translateY(24px)',
+                transition: 'opacity 500ms cubic-bezier(0.22, 1, 0.36, 1), transform 500ms cubic-bezier(0.22, 1, 0.36, 1)',
+                transitionDelay: `${index * 60}ms`,
+              }}
+            >
               <Link
                 href={service.href}
                 className={`group block p-5 rounded-2xl border transition-all duration-300 h-full ${
                   service.featured
-                    ? 'border-safemed-100 bg-gradient-to-br from-safemed-50/80 to-white hover:shadow-xl hover:shadow-safemed-100/40 xl:col-span-1 sm:col-span-1'
-                    : 'border-surface-100 bg-white hover:border-safemed-100 hover:shadow-lg hover:shadow-surface-100/60'
+                    ? 'border-safemed-200 bg-safemed-50/40 hover:shadow-md hover:border-safemed-300'
+                    : 'border-surface-200 bg-white hover:border-safemed-200 hover:shadow-md'
                 }`}
               >
                 <div className={`w-10 h-10 rounded-xl flex items-center justify-center mb-4 transition-colors ${
@@ -156,9 +152,9 @@ export function ServicesGrid() {
                   {service.desc}
                 </p>
               </Link>
-            </motion.div>
+            </div>
           ))}
-        </motion.div>
+        </div>
       </div>
     </section>
   )

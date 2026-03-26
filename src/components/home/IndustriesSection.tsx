@@ -1,6 +1,6 @@
 'use client'
 
-import { motion } from 'framer-motion'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { Factory, Building2, Hammer, Plane, Briefcase, GraduationCap, ArrowRight } from 'lucide-react'
 
@@ -14,14 +14,41 @@ const industries = [
 ]
 
 export function IndustriesSection() {
+  const [headerRef, setHeaderRef] = useState<HTMLElement | null>(null)
+  const [headerVisible, setHeaderVisible] = useState(false)
+  useEffect(() => {
+    if (!headerRef) return
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) setHeaderVisible(true) },
+      { threshold: 0.1 }
+    )
+    observer.observe(headerRef)
+    return () => observer.disconnect()
+  }, [headerRef])
+
+  const [gridRef, setGridRef] = useState<HTMLElement | null>(null)
+  const [gridVisible, setGridVisible] = useState(false)
+  useEffect(() => {
+    if (!gridRef) return
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) setGridVisible(true) },
+      { threshold: 0.1 }
+    )
+    observer.observe(gridRef)
+    return () => observer.disconnect()
+  }, [gridRef])
+
   return (
-    <section className="py-24 lg:py-32">
+    <section className="py-24 lg:py-32 bg-white">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-100px' }}
+        <div
+          ref={setHeaderRef}
           className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-16"
+          style={{
+            opacity: headerVisible ? 1 : 0,
+            transform: headerVisible ? 'translateY(0)' : 'translateY(20px)',
+            transition: 'all 700ms cubic-bezier(0.22,1,0.36,1)',
+          }}
         >
           <div>
             <span className="text-sm font-semibold text-safemed-600 tracking-wide uppercase">Setores</span>
@@ -36,20 +63,22 @@ export function IndustriesSection() {
             Ver todos os setores
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </Link>
-        </motion.div>
+        </div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div ref={setGridRef} className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {industries.map((ind, i) => (
-            <motion.div
+            <div
               key={ind.href}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.08 }}
+              style={{
+                opacity: gridVisible ? 1 : 0,
+                transform: gridVisible ? 'translateY(0)' : 'translateY(20px)',
+                transition: 'all 700ms cubic-bezier(0.22,1,0.36,1)',
+                transitionDelay: `${i * 80}ms`,
+              }}
             >
               <Link
                 href={ind.href}
-                className="group block p-6 rounded-2xl border border-surface-100 bg-white hover:border-surface-200 hover:shadow-lg transition-all duration-300"
+                className="group block p-6 rounded-2xl border border-surface-200 bg-white hover:border-surface-300 hover:shadow-sm transition-all duration-300"
               >
                 <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${ind.color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
                   <ind.icon className="w-6 h-6 text-surface-700" />
@@ -59,7 +88,7 @@ export function IndustriesSection() {
                 </h3>
                 <p className="text-sm text-surface-500 leading-relaxed">{ind.desc}</p>
               </Link>
-            </motion.div>
+            </div>
           ))}
         </div>
       </div>

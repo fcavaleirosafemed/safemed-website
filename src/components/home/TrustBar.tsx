@@ -1,6 +1,6 @@
 'use client'
 
-import { motion } from 'framer-motion'
+import { useState, useEffect } from 'react'
 
 const clients = [
   'Hospital de Santo António',
@@ -16,17 +16,25 @@ const clients = [
 ]
 
 export function TrustBar() {
+  const [visible, setVisible] = useState(false)
+
+  useEffect(() => {
+    setTimeout(() => setVisible(true), 100)
+  }, [])
+
   return (
     <section className="py-16 border-y border-surface-100">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        <motion.p
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
+        <p
+          style={{
+            opacity: visible ? 1 : 0,
+            transform: visible ? 'translateY(0)' : 'translateY(8px)',
+            transition: 'all 700ms cubic-bezier(0.22, 1, 0.36, 1)',
+          }}
           className="text-center text-sm font-medium text-surface-400 mb-10 tracking-wide"
         >
           Empresas que confiam no Safemed para a gestão de SST
-        </motion.p>
+        </p>
 
         {/* Logo scroll - placeholder with text for now, replace with logos */}
         <div className="relative overflow-hidden">
