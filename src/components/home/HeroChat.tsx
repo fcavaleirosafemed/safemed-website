@@ -9,6 +9,23 @@ type Message = {
   content: string
 }
 
+/** Light markdown formatter for chat messages (no external deps) */
+function formatMarkdown(text: string): string {
+  return text
+    // Escape HTML
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    // Bold: **text**
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    // Italic: *text*
+    .replace(/(?<!\*)\*(?!\*)(.+?)(?<!\*)\*(?!\*)/g, '<em>$1</em>')
+    // Links: [text](url) — only safemed.solutions links for safety
+    .replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]*safemed[^\s)]*)\)/g, '<a href="$2" class="underline hover:text-safemed-600" target="_blank" rel="noopener">$1</a>')
+    // Line breaks
+    .replace(/\n/g, '<br/>')
+}
+
 const PLACEHOLDER_EXAMPLES = [
   'Preciso de software de gestão de agendamentos e fichas de aptidão',
   'Que módulos existem para segurança alimentar?',
@@ -184,8 +201,11 @@ export function HeroChat() {
                       ? 'bg-surface-900 text-white rounded-br-md'
                       : 'bg-surface-50 text-surface-700 rounded-bl-md border border-surface-100/60'
                   }`}
+                  dangerouslySetInnerHTML={
+                    msg.role === 'assistant' ? { __html: formatMarkdown(msg.content) } : undefined
+                  }
                 >
-                  {msg.content}
+                  {msg.role === 'user' ? msg.content : undefined}
                 </div>
                 {msg.role === 'user' && (
                   <div className="w-6 h-6 rounded-lg bg-surface-200 flex items-center justify-center flex-shrink-0 mt-0.5">
