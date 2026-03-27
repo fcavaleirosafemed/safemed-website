@@ -1,5 +1,3 @@
-import { streamText } from 'ai'
-import { getAIModel } from '@/lib/ai/provider'
 import { SAFEMED_SYSTEM_PROMPT } from '@/lib/ai/system-prompt'
 import { isWithinDailyLimit, incrementDailyUsage, getDailyUsage } from '@/lib/ai/rate-limiter'
 
@@ -32,9 +30,13 @@ export async function POST(req: Request) {
 
     // Check if AI is configured
     const provider = process.env.AI_PROVIDER || 'anthropic'
+    const anthropicKey = process.env.ANTHROPIC_API_KEY
+    const openaiKey = process.env.OPENAI_API_KEY
     const hasKey =
-      (provider === 'anthropic' && process.env.ANTHROPIC_API_KEY) ||
-      (provider === 'openai' && process.env.OPENAI_API_KEY)
+      (provider === 'anthropic' && anthropicKey && anthropicKey.length > 10) ||
+      (provider === 'openai' && openaiKey && openaiKey.length > 10)
+
+    console.log('[Chat] Provider:', provider, '| Has key:', !!hasKey, '| Key length:', anthropicKey?.length || 0)
 
     if (!hasKey) {
       return fallbackResponse(messages)
@@ -54,17 +56,47 @@ export async function POST(req: Request) {
     // Limit conversation length
     const recentMessages = messages.slice(-10)
 
-    const result = streamText({
-      model: getAIModel(),
-      system: SAFEMED_SYSTEM_PROMPT,
-      messages: recentMessages,
-      maxTokens: 300, // Keep responses concise and cheap
-      temperature: 0.7,
+    // Direct API call to Anthropic (more reliable than SDK for model compatibility)
+    const model = process.env.AI_MODEL || 'claude-haiku-4-5-20251001'
+    const apiResponse = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'x-api-key': anthropicKey!,
+        'anthropic-version': '2023-06-01',
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        model,
+        max_tokens: 300,
+        system: SAFEMED_SYSTEM_PROMPT,
+        messages: recentMessages.map((m: any) => ({ role: m.role, content: m.content })),
+      }),
     })
 
-    return result.toDataStreamResponse()
+    if (!apiResponse.ok) {
+      const err = await apiResponse.text()
+      console.error('[Anthropic API]', apiResponse.status, err.substring(0, 200))
+      throw new Error(`Anthropic API: ${apiResponse.status}`)
+    }
+
+    const data = await apiResponse.json()
+    const text = data.content?.[0]?.text || 'Desculpe, não consegui gerar uma resposta.'
+
+    // Return as stream format compatible with HeroChat parser
+    const encoder = new TextEncoder()
+    const stream = new ReadableStream({
+      start(controller) {
+        controller.enqueue(encoder.encode(`0:${JSON.stringify(text)}\n`))
+        controller.enqueue(encoder.encode(`e:{"finishReason":"stop","usage":{"promptTokens":${data.usage?.input_tokens || 0},"completionTokens":${data.usage?.output_tokens || 0}}}\n`))
+        controller.enqueue(encoder.encode(`d:{"finishReason":"stop","usage":{"promptTokens":${data.usage?.input_tokens || 0},"completionTokens":${data.usage?.output_tokens || 0}}}\n`))
+        controller.close()
+      },
+    })
+    return new Response(stream, {
+      headers: { 'Content-Type': 'text/plain; charset=utf-8', 'X-Vercel-AI-Data-Stream': 'v1' },
+    })
   } catch (error: any) {
-    console.error('[Chat API Error]', error?.message || error)
+    console.error('[Chat API Error]', error?.message || error, error?.stack?.split('\n').slice(0, 3).join('\n'))
 
     if (error?.message?.includes('API key') || error?.message?.includes('401')) {
       return Response.json(
