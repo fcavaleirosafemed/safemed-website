@@ -1,6 +1,6 @@
 import { createAnthropic } from '@ai-sdk/anthropic'
 import { createOpenAI } from '@ai-sdk/openai'
-import type { LanguageModelV1 } from 'ai'
+import type { LanguageModel } from 'ai'
 
 /**
  * AI Provider Configuration
@@ -22,7 +22,7 @@ const PROVIDER_DEFAULTS: Record<ProviderName, string> = {
   openai: 'gpt-4o-mini',
 }
 
-export function getAIModel(): LanguageModelV1 {
+export function getAIModel(): LanguageModel {
   const providerName = (process.env.AI_PROVIDER || 'anthropic') as ProviderName
   const modelId = process.env.AI_MODEL || PROVIDER_DEFAULTS[providerName] || PROVIDER_DEFAULTS.anthropic
 
