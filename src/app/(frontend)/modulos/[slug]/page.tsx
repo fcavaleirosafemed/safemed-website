@@ -35,16 +35,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 }
 
-export async function generateStaticParams() {
-  const payload = await getPayload({ config })
-  const services = await payload.find({
-    collection: 'services',
-    limit: 100,
-    select: { slug: true },
-  })
-  return services.docs.map((s) => ({ slug: s.slug }))
-}
-
 export default async function ModuloPage({ params }: Props) {
   const { slug } = await params
   const service = await getService(slug)

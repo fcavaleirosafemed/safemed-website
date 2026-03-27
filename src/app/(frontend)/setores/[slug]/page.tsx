@@ -35,16 +35,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 }
 
-export async function generateStaticParams() {
-  const payload = await getPayload({ config })
-  const industries = await payload.find({
-    collection: 'industries',
-    limit: 100,
-    select: { slug: true },
-  })
-  return industries.docs.map((s) => ({ slug: s.slug }))
-}
-
 export default async function SetorPage({ params }: Props) {
   const { slug } = await params
   const industry = await getIndustry(slug)
