@@ -12,18 +12,19 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# Railway injects env vars as build args for Payload CMS schema push
+# Railway injects env vars as build args
 ARG DATABASE_URI
 ARG PAYLOAD_SECRET
 ARG NEXT_PUBLIC_SERVER_URL
 ARG ANTHROPIC_API_KEY
 
-ENV DATABASE_URI=${DATABASE_URI}
 ENV PAYLOAD_SECRET=${PAYLOAD_SECRET}
 ENV NEXT_PUBLIC_SERVER_URL=${NEXT_PUBLIC_SERVER_URL}
 ENV ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV NODE_ENV=production
+# Use a dummy DB URI during build - Payload will connect at runtime
+ENV DATABASE_URI=postgresql://dummy:dummy@localhost:5432/dummy
 
 RUN npm run build
 
