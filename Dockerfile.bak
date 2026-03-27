@@ -23,8 +23,9 @@ ENV NEXT_PUBLIC_SERVER_URL=${NEXT_PUBLIC_SERVER_URL}
 ENV ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV NODE_ENV=production
-# Use a dummy DB URI during build - Payload will connect at runtime
+# Skip DB connection during build - Payload connects at runtime
 ENV DATABASE_URI=postgresql://dummy:dummy@localhost:5432/dummy
+ENV PAYLOAD_BUILD_SKIP_DB=true
 
 RUN npm run build
 
