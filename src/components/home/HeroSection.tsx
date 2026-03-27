@@ -38,20 +38,18 @@ export function HeroSection() {
       />
 
       {/* ========== CHAT BAR — Full width, prominent position ========== */}
-      <div className="relative z-10 w-full pt-24 pb-4 animate-fade-in-up" style={{ animationDelay: '200ms' }}>
+      <div className="relative z-10 w-full pt-24 pb-0 animate-fade-in-up" style={{ animationDelay: '200ms' }}>
         <div className="max-w-3xl mx-auto px-6 lg:px-8">
-          <div className="text-center mb-4">
-            <p className="text-sm text-surface-400 font-medium">
-              Pergunte-nos o que precisar — o nosso assistente conhece toda a plataforma
-            </p>
-          </div>
+          <h2 className="text-center text-xl sm:text-2xl font-display font-semibold text-surface-800 mb-5">
+            Pergunte-nos o que precisar — o nosso assistente conhece toda a plataforma
+          </h2>
           <HeroChat />
         </div>
       </div>
 
       {/* ========== HERO CONTENT ========== */}
       <div className="relative flex-1 flex items-center w-full">
-        <div className="w-full max-w-7xl mx-auto px-6 lg:px-8 py-12 lg:py-20">
+        <div className="w-full max-w-7xl mx-auto px-6 lg:px-8 py-8 lg:py-12">
           <div className="grid lg:grid-cols-2 gap-16 lg:gap-20 items-center">
             {/* Left Column: Copy */}
             <div className="max-w-xl">
