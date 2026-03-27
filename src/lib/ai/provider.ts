@@ -18,7 +18,7 @@ import type { LanguageModelV1 } from 'ai'
 type ProviderName = 'anthropic' | 'openai'
 
 const PROVIDER_DEFAULTS: Record<ProviderName, string> = {
-  anthropic: 'claude-sonnet-4-20250514',
+  anthropic: 'claude-haiku-4-20250414',
   openai: 'gpt-4o-mini',
 }
 

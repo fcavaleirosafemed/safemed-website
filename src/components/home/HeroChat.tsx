@@ -21,11 +21,20 @@ export function HeroChat() {
   const [input, setInput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [expanded, setExpanded] = useState(false)
+  const [chatAvailable, setChatAvailable] = useState(true)
   const [placeholderIdx, setPlaceholderIdx] = useState(0)
   const [typedPlaceholder, setTypedPlaceholder] = useState('')
   const [isTypingPlaceholder, setIsTypingPlaceholder] = useState(true)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
+
+  // Check chat availability (rate limit)
+  useEffect(() => {
+    fetch('/api/chat')
+      .then((r) => r.json())
+      .then((data) => setChatAvailable(data.available !== false))
+      .catch(() => setChatAvailable(true)) // fallback is always available
+  }, [])
 
   // Typewriter placeholder effect
   useEffect(() => {
@@ -49,7 +58,7 @@ export function HeroChat() {
   }, [messages])
 
   const sendMessage = async (text: string) => {
-    if (!text.trim() || isLoading) return
+    if (!text.trim() || isLoading || !chatAvailable) return
 
     const userMsg: Message = { id: Date.now().toString(), role: 'user', content: text.trim() }
     const newMessages = [...messages, userMsg]
@@ -66,6 +75,15 @@ export function HeroChat() {
         body: JSON.stringify({ messages: newMessages.map((m) => ({ role: m.role, content: m.content })) }),
       })
 
+      if (res.status === 429) {
+        setChatAvailable(false)
+        setMessages([
+          ...newMessages,
+          { id: (Date.now() + 1).toString(), role: 'assistant', content: 'O limite diário do chat foi atingido. Contacte-nos diretamente em geral@safemed.solutions ou pelo formulário de contacto.' },
+        ])
+        setIsLoading(false)
+        return
+      }
       if (!res.ok) throw new Error('Chat error')
 
       // Parse the streamed response
@@ -126,6 +144,11 @@ export function HeroChat() {
 
   const currentPlaceholder =
     messages.length > 0 || input.length > 0 ? 'Escreva a sua pergunta...' : typedPlaceholder || 'Escreva a sua pergunta...'
+
+  // Hide chat completely when daily limit is reached and no active conversation
+  if (!chatAvailable && messages.length === 0) {
+    return null
+  }
 
   return (
     <div className="w-full">
