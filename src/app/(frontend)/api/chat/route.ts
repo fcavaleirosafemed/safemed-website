@@ -1,76 +1,99 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { streamText } from 'ai'
+import { getAIModel } from '@/lib/ai/provider'
+import { SAFEMED_SYSTEM_PROMPT } from '@/lib/ai/system-prompt'
 
-const SAFEMED_KNOWLEDGE = `
-Safemed é uma empresa portuguesa líder em software de segurança e saúde no trabalho (SST).
-A plataforma é 100% cloud e modular, composta por 10 módulos:
+export const maxDuration = 30
 
-1. Saúde no Trabalho - Fichas clínicas digitais, aptidões, agendamento inteligente, assinaturas digitais
-2. Segurança no Trabalho - Auditorias, mapeamento geográfico, relatórios personalizáveis
-3. Acidentes de Trabalho - Registo de incidentes, investigação, rastreabilidade
-4. Gestão de EPI - Distribuição, alertas de validade, ciclo de vida
-5. Produtos Químicos - FDS, controlo de exposição, classificações CMR
-6. My Safemed - Portal self-service para trabalhadores
-7. Easy Booking - Agendamento autónomo de consultas com lembretes
-8. Segurança Alimentar - Visitas, rotas, gestão documental
-9. Kube - Analytics e business intelligence
-10. Quizzer - Inquéritos em massa com análise estatística
-
-Três edições: Lite, Pro e Gestão Interna.
-Setores: Prestadores de Serviços, Centros Hospitalares, Indústria, Construção, Aviação Civil, Ensino.
-
-Contacto: info@safemed.solutions | +351 22 093 00 55 | Porto, Portugal
-Website: safemed.solutions
-`
-
-export async function POST(req: NextRequest) {
+export async function POST(req: Request) {
   try {
     const { messages } = await req.json()
 
-    // If Mivo API is configured, proxy to it
-    const mivoUrl = process.env.MIVO_API_URL
-    const mivoKey = process.env.MIVO_API_KEY
+    // Check if AI is configured
+    const provider = process.env.AI_PROVIDER || 'anthropic'
+    const hasKey =
+      (provider === 'anthropic' && process.env.ANTHROPIC_API_KEY) ||
+      (provider === 'openai' && process.env.OPENAI_API_KEY)
 
-    if (mivoUrl && mivoKey) {
-      const response = await fetch(`${mivoUrl}/chat`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${mivoKey}`,
-        },
-        body: JSON.stringify({
-          messages,
-          systemPrompt: `Sou o assistente virtual do Safemed. Respondo a perguntas sobre a plataforma de SST de forma útil e profissional, em português.\n\n${SAFEMED_KNOWLEDGE}`,
-        }),
-      })
-
-      if (response.ok) {
-        const data = await response.json()
-        return NextResponse.json({ reply: data.reply || data.content })
-      }
+    if (!hasKey) {
+      // Fallback: knowledge-based response without AI
+      return fallbackResponse(messages)
     }
 
-    // Fallback: simple knowledge-based response
-    const lastMessage = messages[messages.length - 1]?.content?.toLowerCase() || ''
+    // Limit conversation to prevent abuse
+    const recentMessages = messages.slice(-10)
 
-    let reply = 'Obrigado pela sua mensagem! Para obter informações mais detalhadas ou pedir uma demonstração, pode contactar-nos em info@safemed.solutions ou pelo +351 22 093 00 55.'
+    const result = streamText({
+      model: getAIModel(),
+      system: SAFEMED_SYSTEM_PROMPT,
+      messages: recentMessages,
+      maxTokens: 500,
+      temperature: 0.7,
+    })
 
-    if (lastMessage.includes('módulo') || lastMessage.includes('modulo')) {
-      reply = 'O Safemed dispõe de 10 módulos: Saúde no Trabalho, Segurança no Trabalho, Acidentes de Trabalho, Gestão de EPI, Produtos Químicos, My Safemed, Easy Booking, Segurança Alimentar, Kube Analytics e Quizzer. Cada módulo funciona de forma independente mas integra-se com os restantes. Quer saber mais sobre algum em particular?'
-    } else if (lastMessage.includes('demonstração') || lastMessage.includes('demo')) {
-      reply = 'Ótimo! Teremos todo o gosto em mostrar-lhe o Safemed em ação. Pode agendar uma demonstração gratuita em safemed.solutions/contacto ou contactar-nos pelo +351 22 093 00 55.'
-    } else if (lastMessage.includes('preço') || lastMessage.includes('custo') || lastMessage.includes('valor')) {
-      reply = 'O Safemed tem três edições — Lite, Pro e Gestão Interna — adaptadas a diferentes necessidades. O preço depende dos módulos e número de utilizadores. Contacte-nos para uma proposta personalizada: info@safemed.solutions'
-    } else if (lastMessage.includes('setor') || lastMessage.includes('indústria') || lastMessage.includes('industria')) {
-      reply = 'Trabalhamos com diversos setores: Prestadores de Serviços, Centros Hospitalares, Indústria, Construção, Aviação Civil e Ensino. A plataforma adapta-se às necessidades específicas de cada setor.'
-    } else if (lastMessage.includes('saúde') || lastMessage.includes('saude') || lastMessage.includes('ocupacional')) {
-      reply = 'O módulo de Saúde no Trabalho inclui fichas clínicas digitais, gestão de aptidões, agendamento inteligente, assinaturas digitais, mapeamento de riscos e lembretes automáticos por SMS. É o nosso módulo mais utilizado!'
+    return result.toDataStreamResponse()
+  } catch (error: any) {
+    console.error('[Chat API Error]', error?.message || error)
+
+    if (error?.message?.includes('API key') || error?.message?.includes('401')) {
+      return new Response(
+        JSON.stringify({ error: 'O chat AI não está configurado. Contacte-nos diretamente.' }),
+        { status: 503, headers: { 'Content-Type': 'application/json' } },
+      )
     }
 
-    return NextResponse.json({ reply })
-  } catch (error) {
-    return NextResponse.json(
-      { reply: 'Desculpe, ocorreu um erro. Tente novamente mais tarde.' },
-      { status: 500 }
+    return new Response(
+      JSON.stringify({ error: 'Ocorreu um erro. Por favor tente novamente.' }),
+      { status: 500, headers: { 'Content-Type': 'application/json' } },
     )
   }
+}
+
+/**
+ * Fallback when no AI API key is configured.
+ * Returns a simple keyword-matched response.
+ */
+function fallbackResponse(messages: any[]) {
+  const lastMessage = messages[messages.length - 1]?.content?.toLowerCase() || ''
+
+  let reply =
+    'Obrigado pela sua mensagem! O Safemed é uma plataforma modular para gestão de Segurança e Saúde no Trabalho. Para informações detalhadas, contacte-nos em geral@safemed.solutions ou agende uma demonstração.'
+
+  if (lastMessage.includes('módulo') || lastMessage.includes('modulo')) {
+    reply =
+      'O Safemed dispõe de 10 módulos: Saúde no Trabalho, Segurança no Trabalho, Acidentes de Trabalho, Gestão de EPI, Produtos Químicos, My Safemed, Easy Booking, Segurança Alimentar, Kube Analytics e Quizzer. Quer saber mais sobre algum?'
+  } else if (lastMessage.includes('demonstração') || lastMessage.includes('demo')) {
+    reply =
+      'Teremos todo o gosto em mostrar-lhe o Safemed! Pode agendar uma demonstração gratuita na página de contacto.'
+  } else if (lastMessage.includes('preço') || lastMessage.includes('custo') || lastMessage.includes('valor')) {
+    reply =
+      'O preço do Safemed depende dos módulos e número de trabalhadores. Contacte-nos para uma proposta personalizada: geral@safemed.solutions'
+  } else if (lastMessage.includes('agendamento') || lastMessage.includes('aptidão') || lastMessage.includes('aptidao')) {
+    reply =
+      'Para gestão de agendamentos e fichas de aptidão, o módulo de Saúde no Trabalho é ideal. Inclui fichas clínicas digitais, agendamento inteligente, assinatura digital certificada e lembretes automáticos por SMS.'
+  } else if (lastMessage.includes('saúde') || lastMessage.includes('saude') || lastMessage.includes('ocupacional')) {
+    reply =
+      'O módulo de Saúde no Trabalho inclui fichas clínicas parametrizáveis, fichas de aptidão digitais, agendamento inteligente, assinaturas digitais, mapeamento de riscos e notificações automáticas.'
+  } else if (lastMessage.includes('segurança') || lastMessage.includes('seguranca') || lastMessage.includes('auditoria')) {
+    reply =
+      'O módulo de Segurança no Trabalho inclui gestão de auditorias, checklists parametrizáveis, mapa de visitas com geolocalização, relatórios personalizáveis e gestão de medidas de autoproteção.'
+  }
+
+  // Return as a streamed-like response for consistency with useChat
+  const encoder = new TextEncoder()
+  const stream = new ReadableStream({
+    start(controller) {
+      // Vercel AI SDK data stream format
+      controller.enqueue(encoder.encode(`0:"${reply.replace(/"/g, '\\"')}"\n`))
+      controller.enqueue(encoder.encode(`e:{"finishReason":"stop","usage":{"promptTokens":0,"completionTokens":0}}\n`))
+      controller.enqueue(encoder.encode(`d:{"finishReason":"stop","usage":{"promptTokens":0,"completionTokens":0}}\n`))
+      controller.close()
+    },
+  })
+
+  return new Response(stream, {
+    headers: {
+      'Content-Type': 'text/plain; charset=utf-8',
+      'X-Vercel-AI-Data-Stream': 'v1',
+    },
+  })
 }

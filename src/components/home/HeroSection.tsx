@@ -2,66 +2,16 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { ArrowRight, Play, Shield, Sparkles, MessageSquare, Send, Building2, Blocks, Globe } from 'lucide-react'
-
-const TYPEWRITER_MESSAGES = [
-  'Quantos colaboradores têm consultas esta semana?',
-  'Qual a taxa de conformidade do armazém B?',
-  'Mostra-me as aptidões que expiram este mês',
-]
-
-const TYPING_SPEED = 45
-const PAUSE_AFTER_TYPING = 2000
-const PAUSE_AFTER_DELETING = 400
-const DELETING_SPEED = 20
+import { ArrowRight, Play, Shield, Sparkles, Building2, Blocks, Globe } from 'lucide-react'
+import { HeroChat } from './HeroChat'
 
 export function HeroSection() {
-  const [typewriterText, setTypewriterText] = useState('')
-  const [messageIndex, setMessageIndex] = useState(0)
-  const [isDeleting, setIsDeleting] = useState(false)
-  const [showCursor, setShowCursor] = useState(true)
   const [chartsReady, setChartsReady] = useState(false)
 
   useEffect(() => {
     const t = setTimeout(() => setChartsReady(true), 800)
     return () => clearTimeout(t)
   }, [])
-
-  // Cursor blink
-  useEffect(() => {
-    const interval = setInterval(() => setShowCursor((prev) => !prev), 530)
-    return () => clearInterval(interval)
-  }, [])
-
-  // Typewriter effect
-  useEffect(() => {
-    const currentMessage = TYPEWRITER_MESSAGES[messageIndex]
-
-    if (!isDeleting) {
-      if (typewriterText.length < currentMessage.length) {
-        const timeout = setTimeout(() => {
-          setTypewriterText(currentMessage.slice(0, typewriterText.length + 1))
-        }, TYPING_SPEED)
-        return () => clearTimeout(timeout)
-      } else {
-        const timeout = setTimeout(() => setIsDeleting(true), PAUSE_AFTER_TYPING)
-        return () => clearTimeout(timeout)
-      }
-    } else {
-      if (typewriterText.length > 0) {
-        const timeout = setTimeout(() => {
-          setTypewriterText(typewriterText.slice(0, -1))
-        }, DELETING_SPEED)
-        return () => clearTimeout(timeout)
-      } else {
-        const timeout = setTimeout(() => {
-          setIsDeleting(false)
-          setMessageIndex((prev) => (prev + 1) % TYPEWRITER_MESSAGES.length)
-        }, PAUSE_AFTER_DELETING)
-        return () => clearTimeout(timeout)
-      }
-    }
-  }, [typewriterText, isDeleting, messageIndex])
 
   return (
     <section className="relative min-h-screen flex items-center overflow-hidden bg-white">
@@ -241,30 +191,9 @@ export function HeroSection() {
               </div>
             </div>
 
-            {/* Mivo AI Chat Input */}
+            {/* Functional AI Chat */}
             <div className="mt-4 relative animate-fade-in-up" style={{ animationDelay: '900ms' }}>
-              <div className="rounded-xl border border-surface-200/80 bg-white shadow-lg shadow-surface-950/[0.04] p-3">
-                <div className="flex items-center gap-2.5 mb-2">
-                  <div className="w-6 h-6 rounded-lg bg-gradient-to-br from-safemed-500 to-safemed-600 flex items-center justify-center">
-                    <Sparkles className="w-3 h-3 text-white" />
-                  </div>
-                  <span className="text-xs font-semibold text-surface-800">Mivo AI</span>
-                  <span className="text-[10px] text-surface-400 font-medium">Assistente inteligente</span>
-                </div>
-                <div className="flex items-center gap-2 bg-surface-50/80 rounded-lg border border-surface-100/60 px-3 py-2.5">
-                  <MessageSquare className="w-3.5 h-3.5 text-surface-400 flex-shrink-0" />
-                  <div className="flex-1 text-sm text-surface-400 font-normal truncate">
-                    {typewriterText}
-                    <span
-                      className="inline-block w-[2px] h-4 bg-safemed-500 ml-0.5 align-middle"
-                      style={{ opacity: showCursor ? 1 : 0 }}
-                    />
-                  </div>
-                  <div className="w-7 h-7 rounded-lg bg-safemed-500 flex items-center justify-center flex-shrink-0 hover:bg-safemed-600 transition-colors cursor-pointer">
-                    <Send className="w-3 h-3 text-white" />
-                  </div>
-                </div>
-              </div>
+              <HeroChat />
             </div>
 
             {/* Floating badge — top right */}
