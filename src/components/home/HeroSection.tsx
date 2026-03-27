@@ -49,7 +49,7 @@ export function HeroSection() {
 
       {/* ========== HERO CONTENT ========== */}
       <div className="relative flex-1 flex items-center w-full">
-        <div className="w-full max-w-7xl mx-auto px-6 lg:px-8 py-8 lg:py-12">
+        <div className="w-full max-w-7xl mx-auto px-6 lg:px-8 pt-4 lg:pt-6 pb-8 lg:pb-12">
           <div className="grid lg:grid-cols-2 gap-16 lg:gap-20 items-center">
             {/* Left Column: Copy */}
             <div className="max-w-xl">
