@@ -116,6 +116,9 @@ export interface ModulePageProps {
   highlight?: ModuleHighlight
   additionalBenefits?: string[]
   showCta?: boolean
+  label?: string
+  backHref?: string
+  backLabel?: string
 }
 
 function useScrollReveal() {
@@ -161,6 +164,9 @@ export function ModulePage({
   highlight,
   additionalBenefits,
   showCta = true,
+  label = 'Módulo',
+  backHref = '/modulos',
+  backLabel = 'Todos os módulos',
 }: ModulePageProps) {
   const revealRef = useScrollReveal()
   const gridCols = features.length >= 5 ? 'lg:grid-cols-3' : ''
@@ -180,17 +186,17 @@ export function ModulePage({
         />
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <Link
-            href="/modulos"
+            href={backHref}
             className="inline-flex items-center gap-2 text-sm text-surface-500 hover:text-safemed-600 transition-colors mb-8"
           >
             <ArrowLeft className="w-4 h-4" />
-            Todos os módulos
+            {backLabel}
           </Link>
 
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
             <div data-reveal>
               <span className="inline-block text-sm font-semibold text-safemed-600 tracking-wide uppercase mb-4">
-                Módulo
+                {label}
               </span>
               <h1 className="text-4xl lg:text-5xl font-display font-bold tracking-tight text-surface-950 mb-6">
                 {title}

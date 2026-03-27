@@ -5,7 +5,7 @@ export const Services: CollectionConfig = {
   admin: {
     useAsTitle: 'title',
     group: 'Conteúdo',
-    defaultColumns: ['title', 'slug', 'category', 'status'],
+    defaultColumns: ['title', 'slug', 'category', 'order'],
   },
   access: {
     read: () => true,
@@ -39,6 +39,11 @@ export const Services: CollectionConfig = {
       admin: { position: 'sidebar' },
     },
     {
+      name: 'order',
+      type: 'number',
+      admin: { position: 'sidebar' },
+    },
+    {
       name: 'icon',
       type: 'text',
       admin: {
@@ -46,20 +51,58 @@ export const Services: CollectionConfig = {
       },
     },
     {
+      name: 'subtitle',
+      type: 'textarea',
+      localized: true,
+      admin: {
+        description: 'Frase curta abaixo do título no hero (ex: "Um software adaptado para...")',
+      },
+    },
+    {
       name: 'excerpt',
       type: 'textarea',
       required: true,
       localized: true,
+      admin: {
+        description: 'Descrição curta para SEO e listagens',
+      },
+    },
+    {
+      name: 'descriptionText',
+      type: 'textarea',
+      localized: true,
+      admin: {
+        description: 'Descrição longa que aparece na página do módulo',
+      },
+    },
+    {
+      name: 'heroImageUrl',
+      type: 'text',
+      admin: {
+        description: 'URL da imagem hero (path relativo, ex: /images/modules/saude-trabalho-hero.jpg)',
+      },
     },
     {
       name: 'heroImage',
       type: 'upload',
       relationTo: 'media',
     },
+    // Features section
     {
-      name: 'description',
-      type: 'richText',
+      name: 'featuresHeading',
+      type: 'text',
       localized: true,
+      admin: {
+        description: 'Título da secção de funcionalidades',
+      },
+    },
+    {
+      name: 'featuresSubheading',
+      type: 'textarea',
+      localized: true,
+      admin: {
+        description: 'Subtítulo da secção de funcionalidades',
+      },
     },
     {
       name: 'features',
@@ -68,13 +111,30 @@ export const Services: CollectionConfig = {
       fields: [
         { name: 'title', type: 'text', required: true },
         { name: 'description', type: 'textarea' },
-        { name: 'icon', type: 'text' },
+        { name: 'icon', type: 'text', admin: { description: 'Nome do ícone Lucide' } },
       ],
     },
+    // Highlight/callout section
     {
-      name: 'order',
-      type: 'number',
-      admin: { position: 'sidebar' },
+      name: 'highlight',
+      type: 'group',
+      fields: [
+        { name: 'heading', type: 'text', localized: true },
+        { name: 'text', type: 'textarea', localized: true },
+        {
+          name: 'bullets',
+          type: 'array',
+          fields: [
+            { name: 'text', type: 'text', required: true },
+          ],
+        },
+      ],
+    },
+    // Rich text description (for CMS editor)
+    {
+      name: 'description',
+      type: 'richText',
+      localized: true,
     },
   ],
 }

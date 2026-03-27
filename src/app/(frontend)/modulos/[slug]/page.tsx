@@ -1,0 +1,79 @@
+import type { Metadata } from 'next'
+import { notFound } from 'next/navigation'
+import { getPayload } from 'payload'
+import config from '@payload-config'
+import { ModulePage } from '@/components/modules/ModulePage'
+
+type Props = {
+  params: Promise<{ slug: string }>
+}
+
+async function getService(slug: string) {
+  const payload = await getPayload({ config })
+  const result = await payload.find({
+    collection: 'services',
+    where: { slug: { equals: slug } },
+    limit: 1,
+  })
+  return result.docs[0] || null
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params
+  const service = await getService(slug)
+  if (!service) return { title: 'Módulo não encontrado' }
+
+  return {
+    title: service.title,
+    description: service.excerpt,
+    openGraph: {
+      title: `${service.title} — Safemed`,
+      description: service.subtitle || service.excerpt,
+    },
+  }
+}
+
+export async function generateStaticParams() {
+  const payload = await getPayload({ config })
+  const services = await payload.find({
+    collection: 'services',
+    limit: 100,
+    select: { slug: true },
+  })
+  return services.docs.map((s) => ({ slug: s.slug }))
+}
+
+export default async function ModuloPage({ params }: Props) {
+  const { slug } = await params
+  const service = await getService(slug)
+  if (!service) notFound()
+
+  // Map Payload data to ModulePage props
+  const features = (service.features || []).map((f: any) => ({
+    icon: f.icon || 'FileText',
+    title: f.title,
+    description: f.description || '',
+  }))
+
+  const highlight = service.highlight?.heading
+    ? {
+        heading: service.highlight.heading,
+        text: service.highlight.text || '',
+        bullets: (service.highlight.bullets || []).map((b: any) => b.text),
+      }
+    : undefined
+
+  return (
+    <ModulePage
+      title={service.title}
+      subtitle={service.subtitle || service.excerpt}
+      description={service.descriptionText || ''}
+      heroImage={service.heroImageUrl || '/images/modules/modulos-hero-meeting.jpg'}
+      heroImageAlt={`${service.title} - Safemed`}
+      features={features}
+      featuresHeading={service.featuresHeading || `Funcionalidades de ${service.title}`}
+      featuresSubheading={service.featuresSubheading || ''}
+      highlight={highlight}
+    />
+  )
+}

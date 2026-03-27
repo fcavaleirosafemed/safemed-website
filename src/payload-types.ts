@@ -297,12 +297,57 @@ export interface Service {
   title: string;
   slug: string;
   category: 'core' | 'addon' | 'tool';
+  order?: number | null;
   /**
    * Nome do ícone Lucide (ex: shield, heart, hard-hat)
    */
   icon?: string | null;
+  /**
+   * Frase curta abaixo do título no hero (ex: "Um software adaptado para...")
+   */
+  subtitle?: string | null;
+  /**
+   * Descrição curta para SEO e listagens
+   */
   excerpt: string;
+  /**
+   * Descrição longa que aparece na página do módulo
+   */
+  descriptionText?: string | null;
+  /**
+   * URL da imagem hero (path relativo, ex: /images/modules/saude-trabalho-hero.jpg)
+   */
+  heroImageUrl?: string | null;
   heroImage?: (number | null) | Media;
+  /**
+   * Título da secção de funcionalidades
+   */
+  featuresHeading?: string | null;
+  /**
+   * Subtítulo da secção de funcionalidades
+   */
+  featuresSubheading?: string | null;
+  features?:
+    | {
+        title: string;
+        description?: string | null;
+        /**
+         * Nome do ícone Lucide
+         */
+        icon?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  highlight?: {
+    heading?: string | null;
+    text?: string | null;
+    bullets?:
+      | {
+          text: string;
+          id?: string | null;
+        }[]
+      | null;
+  };
   description?: {
     root: {
       type: string;
@@ -318,15 +363,6 @@ export interface Service {
     };
     [k: string]: unknown;
   } | null;
-  features?:
-    | {
-        title: string;
-        description?: string | null;
-        icon?: string | null;
-        id?: string | null;
-      }[]
-    | null;
-  order?: number | null;
   meta?: {
     title?: string | null;
     description?: string | null;
@@ -347,9 +383,58 @@ export interface Industry {
   id: number;
   title: string;
   slug: string;
-  excerpt?: string | null;
+  order?: number | null;
+  /**
+   * Nome do ícone Lucide (ex: factory, hard-hat, plane)
+   */
   icon?: string | null;
+  /**
+   * Frase curta abaixo do título no hero
+   */
+  subtitle?: string | null;
+  /**
+   * Descrição curta para SEO e listagens
+   */
+  excerpt?: string | null;
+  /**
+   * Descrição longa que aparece na página do setor
+   */
+  descriptionText?: string | null;
+  /**
+   * URL da imagem hero (path relativo, ex: /images/modules/seguranca-trabalho-hero.jpg)
+   */
+  heroImageUrl?: string | null;
   heroImage?: (number | null) | Media;
+  /**
+   * Título da secção de funcionalidades
+   */
+  featuresHeading?: string | null;
+  /**
+   * Subtítulo da secção de funcionalidades
+   */
+  featuresSubheading?: string | null;
+  features?:
+    | {
+        title: string;
+        description?: string | null;
+        /**
+         * Nome do ícone Lucide
+         */
+        icon?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  highlight?: {
+    heading?: string | null;
+    text?: string | null;
+    bullets?:
+      | {
+          text: string;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  relatedServices?: (number | Service)[] | null;
   description?: {
     root: {
       type: string;
@@ -365,8 +450,6 @@ export interface Industry {
     };
     [k: string]: unknown;
   } | null;
-  relatedServices?: (number | Service)[] | null;
-  order?: number | null;
   meta?: {
     title?: string | null;
     description?: string | null;
@@ -668,10 +751,15 @@ export interface ServicesSelect<T extends boolean = true> {
   title?: T;
   slug?: T;
   category?: T;
+  order?: T;
   icon?: T;
+  subtitle?: T;
   excerpt?: T;
+  descriptionText?: T;
+  heroImageUrl?: T;
   heroImage?: T;
-  description?: T;
+  featuresHeading?: T;
+  featuresSubheading?: T;
   features?:
     | T
     | {
@@ -680,7 +768,19 @@ export interface ServicesSelect<T extends boolean = true> {
         icon?: T;
         id?: T;
       };
-  order?: T;
+  highlight?:
+    | T
+    | {
+        heading?: T;
+        text?: T;
+        bullets?:
+          | T
+          | {
+              text?: T;
+              id?: T;
+            };
+      };
+  description?: T;
   meta?:
     | T
     | {
@@ -699,12 +799,37 @@ export interface ServicesSelect<T extends boolean = true> {
 export interface IndustriesSelect<T extends boolean = true> {
   title?: T;
   slug?: T;
-  excerpt?: T;
-  icon?: T;
-  heroImage?: T;
-  description?: T;
-  relatedServices?: T;
   order?: T;
+  icon?: T;
+  subtitle?: T;
+  excerpt?: T;
+  descriptionText?: T;
+  heroImageUrl?: T;
+  heroImage?: T;
+  featuresHeading?: T;
+  featuresSubheading?: T;
+  features?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        icon?: T;
+        id?: T;
+      };
+  highlight?:
+    | T
+    | {
+        heading?: T;
+        text?: T;
+        bullets?:
+          | T
+          | {
+              text?: T;
+              id?: T;
+            };
+      };
+  relatedServices?: T;
+  description?: T;
   meta?:
     | T
     | {
