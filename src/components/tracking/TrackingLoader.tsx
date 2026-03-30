@@ -16,14 +16,12 @@ export async function TrackingLoader() {
   try {
     const payload = await getPayload({ config })
     const settings = await payload.findGlobal({ slug: 'site-settings' })
-    const tracking = (settings as any)?.tracking
+    const s = settings as any
 
-    if (tracking) {
-      trackingConfig = {
-        gtmId: tracking.gtmId || null,
-        gaId: tracking.gaId || null,
-        hubspotId: tracking.hubspotId || null,
-      }
+    trackingConfig = {
+      gtmId: s?.gtmId || null,
+      gaId: s?.gaId || null,
+      hubspotId: s?.hubspotId || null,
     }
   } catch {
     // CMS unavailable — no tracking scripts loaded

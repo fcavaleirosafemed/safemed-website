@@ -41,38 +41,33 @@ export const SiteSettings: GlobalConfig = {
           label: 'Integrações',
           fields: [
             {
-              type: 'group',
-              name: 'tracking',
-              label: 'Tracking & Analytics',
-              fields: [
-                {
-                  name: 'gtmId',
-                  type: 'text',
-                  label: 'Google Tag Manager ID',
-                  admin: { description: 'Ex: GTM-XXXXXXX' },
-                },
-                {
-                  name: 'gaId',
-                  type: 'text',
-                  label: 'Google Analytics ID',
-                  admin: { description: 'Ex: G-XXXXXXXXXX' },
-                },
-                {
-                  name: 'hubspotId',
-                  type: 'text',
-                  label: 'HubSpot Tracking Code',
-                  admin: { description: 'ID do portal HubSpot' },
-                },
-              ],
+              name: 'gtmId',
+              type: 'text',
+              label: 'Google Tag Manager ID',
+              admin: { description: 'Ex: GTM-XXXXXXX' },
             },
             {
-              type: 'group',
-              name: 'mivo',
-              label: 'Mivo Chat',
-              fields: [
-                { name: 'enabled', type: 'checkbox', label: 'Ativar Chat Mivo', defaultValue: true },
-                { name: 'apiUrl', type: 'text', label: 'Mivo API URL' },
-              ],
+              name: 'gaId',
+              type: 'text',
+              label: 'Google Analytics ID',
+              admin: { description: 'Ex: G-XXXXXXXXXX' },
+            },
+            {
+              name: 'hubspotId',
+              type: 'text',
+              label: 'HubSpot Tracking Code',
+              admin: { description: 'ID do portal HubSpot' },
+            },
+            {
+              name: 'mivoEnabled',
+              type: 'checkbox',
+              label: 'Ativar Chat Mivo',
+              defaultValue: true,
+            },
+            {
+              name: 'mivoApiUrl',
+              type: 'text',
+              label: 'Mivo API URL',
             },
           ],
         },

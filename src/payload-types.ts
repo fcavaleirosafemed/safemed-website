@@ -1107,24 +1107,20 @@ export interface SiteSetting {
   facebook?: string | null;
   instagram?: string | null;
   youtube?: string | null;
-  tracking?: {
-    /**
-     * Ex: GTM-XXXXXXX
-     */
-    gtmId?: string | null;
-    /**
-     * Ex: G-XXXXXXXXXX
-     */
-    gaId?: string | null;
-    /**
-     * ID do portal HubSpot
-     */
-    hubspotId?: string | null;
-  };
-  mivo?: {
-    enabled?: boolean | null;
-    apiUrl?: string | null;
-  };
+  /**
+   * Ex: GTM-XXXXXXX
+   */
+  gtmId?: string | null;
+  /**
+   * Ex: G-XXXXXXXXXX
+   */
+  gaId?: string | null;
+  /**
+   * ID do portal HubSpot
+   */
+  hubspotId?: string | null;
+  mivoEnabled?: boolean | null;
+  mivoApiUrl?: string | null;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -1174,19 +1170,11 @@ export interface SiteSettingsSelect<T extends boolean = true> {
   facebook?: T;
   instagram?: T;
   youtube?: T;
-  tracking?:
-    | T
-    | {
-        gtmId?: T;
-        gaId?: T;
-        hubspotId?: T;
-      };
-  mivo?:
-    | T
-    | {
-        enabled?: T;
-        apiUrl?: T;
-      };
+  gtmId?: T;
+  gaId?: T;
+  hubspotId?: T;
+  mivoEnabled?: T;
+  mivoApiUrl?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
