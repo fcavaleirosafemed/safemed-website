@@ -10,13 +10,29 @@ type Props = {
   params: Promise<{ slug: string }>
 }
 
+/** Normalize slug: remove accents so URL without accents matches CMS slug with accents */
+function normalizeSlug(s: string): string {
+  return s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
+}
+
 async function getIndustry(slug: string) {
   const payload = await getPayload({ config })
-  const result = await payload.find({
+
+  // First try exact match
+  let result = await payload.find({
     collection: 'industries',
     where: { slug: { equals: slug } },
     limit: 1,
   })
+
+  // If not found, try matching with normalized slugs (handles accents)
+  if (result.docs.length === 0) {
+    const all = await payload.find({ collection: 'industries', limit: 50 })
+    const normalized = normalizeSlug(slug)
+    const match = all.docs.find((d) => normalizeSlug(d.slug) === normalized)
+    if (match) return match
+  }
+
   return result.docs[0] || null
 }
 
