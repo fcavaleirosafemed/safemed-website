@@ -8,7 +8,6 @@ import { TrackingScripts } from './TrackingScripts'
  */
 export async function TrackingLoader() {
   let trackingConfig = {
-    snitcherId: null as string | null,
     gtmId: null as string | null,
     gaId: null as string | null,
     hubspotId: null as string | null,
@@ -21,7 +20,6 @@ export async function TrackingLoader() {
 
     if (tracking) {
       trackingConfig = {
-        snitcherId: tracking.snitcherId || null,
         gtmId: tracking.gtmId || null,
         gaId: tracking.gaId || null,
         hubspotId: tracking.hubspotId || null,

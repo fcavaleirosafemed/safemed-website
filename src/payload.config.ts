@@ -15,6 +15,7 @@ import { BlogPosts } from './collections/BlogPosts'
 import { Media } from './collections/Media'
 import { Testimonials } from './collections/Testimonials'
 import { TeamMembers } from './collections/TeamMembers'
+import { Visitors } from './collections/Visitors'
 
 // Globals
 import { SiteSettings } from './globals/SiteSettings'
@@ -42,6 +43,7 @@ export default buildConfig({
     Media,
     Testimonials,
     TeamMembers,
+    Visitors,
   ],
   globals: [
     SiteSettings,

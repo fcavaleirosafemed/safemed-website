@@ -27,26 +27,6 @@ function getConsent(): CookiePrefs | null {
   }
 }
 
-// ─── Snitcher ────────────────────────────────────────────────
-function loadSnitcher(snitcherId: string) {
-  if (document.getElementById('snitcher-script')) return
-  const w = window as any
-  w.SnitcherObject = 'snid'
-  w.snid =
-    w.snid ||
-    function (...args: any[]) {
-      ;(w.snid.q = w.snid.q || []).push(args)
-    }
-  w.snid.l = +new Date()
-
-  const script = document.createElement('script')
-  script.id = 'snitcher-script'
-  script.async = true
-  script.src = `//snid.snitcher.com/${snitcherId}.js`
-  document.head.appendChild(script)
-  w.snid('verify', snitcherId)
-}
-
 // ─── Google Tag Manager ──────────────────────────────────────
 function loadGTM(gtmId: string) {
   if (document.getElementById('gtm-script')) return
@@ -92,13 +72,12 @@ function loadHubSpot(hubspotId: string) {
 }
 
 export interface TrackingConfig {
-  snitcherId?: string | null
   gtmId?: string | null
   gaId?: string | null
   hubspotId?: string | null
 }
 
-export function TrackingScripts({ snitcherId, gtmId, gaId, hubspotId }: TrackingConfig) {
+export function TrackingScripts({ gtmId, gaId, hubspotId }: TrackingConfig) {
   const initTracking = useCallback(
     (consent: CookiePrefs) => {
       // Analytics scripts — require analytics consent
@@ -107,13 +86,12 @@ export function TrackingScripts({ snitcherId, gtmId, gaId, hubspotId }: Tracking
         if (gaId) loadGA(gaId)
       }
 
-      // Marketing/identification scripts — require marketing consent
+      // Marketing scripts — require marketing consent
       if (consent.marketing) {
-        if (snitcherId) loadSnitcher(snitcherId)
         if (hubspotId) loadHubSpot(hubspotId)
       }
     },
-    [snitcherId, gtmId, gaId, hubspotId],
+    [gtmId, gaId, hubspotId],
   )
 
   useEffect(() => {

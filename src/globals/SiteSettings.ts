@@ -46,14 +46,6 @@ export const SiteSettings: GlobalConfig = {
               label: 'Tracking & Analytics',
               fields: [
                 {
-                  name: 'snitcherId',
-                  type: 'text',
-                  label: 'Snitcher ID',
-                  admin: {
-                    description: 'ID do Snitcher para identificação de visitantes B2B (ex: abc123def456)',
-                  },
-                },
-                {
                   name: 'gtmId',
                   type: 'text',
                   label: 'Google Tag Manager ID',

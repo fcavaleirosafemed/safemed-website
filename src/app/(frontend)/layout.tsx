@@ -5,6 +5,7 @@ import { Footer } from '@/components/layout/Footer'
 import { MivoChatWidget } from '@/components/chat/MivoChatWidget'
 import { CookieConsent } from '@/components/ui/CookieConsent'
 import { TrackingLoader } from '@/components/tracking/TrackingLoader'
+import { VisitorTracker } from '@/components/tracking/VisitorTracker'
 
 export const metadata: Metadata = {
   title: {
@@ -46,6 +47,7 @@ export default function FrontendLayout({
         <MivoChatWidget />
         <CookieConsent />
         <TrackingLoader />
+        <VisitorTracker />
       </body>
     </html>
   )
