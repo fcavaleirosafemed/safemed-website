@@ -75,7 +75,6 @@ export interface Config {
     media: Media;
     testimonials: Testimonial;
     'team-members': TeamMember;
-    visitors: Visitor;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -91,7 +90,6 @@ export interface Config {
     media: MediaSelect<false> | MediaSelect<true>;
     testimonials: TestimonialsSelect<false> | TestimonialsSelect<true>;
     'team-members': TeamMembersSelect<false> | TeamMembersSelect<true>;
-    visitors: VisitorsSelect<false> | VisitorsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -542,86 +540,6 @@ export interface Testimonial {
   createdAt: string;
 }
 /**
- * Empresas e visitantes identificados no website
- *
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "visitors".
- */
-export interface Visitor {
-  id: number;
-  /**
-   * Identificada via IP lookup
-   */
-  company?: string | null;
-  domain?: string | null;
-  /**
-   * Identificador único do visitante (cookie)
-   */
-  visitorId?: string | null;
-  /**
-   * Último IP registado
-   */
-  ip?: string | null;
-  country?: string | null;
-  region?: string | null;
-  city?: string | null;
-  totalVisits?: number | null;
-  pagesViewed?: number | null;
-  totalTimeSeconds?: number | null;
-  firstSeenAt?: string | null;
-  lastSeenAt?: string | null;
-  /**
-   * Último user agent registado
-   */
-  userAgent?: string | null;
-  device?: ('desktop' | 'mobile' | 'tablet') | null;
-  /**
-   * De onde veio o visitante na primeira visita
-   */
-  referrer?: string | null;
-  utmSource?: string | null;
-  utmMedium?: string | null;
-  utmCampaign?: string | null;
-  /**
-   * Últimas 50 páginas visitadas
-   */
-  pageViews?:
-    | {
-        path?: string | null;
-        title?: string | null;
-        viewedAt?: string | null;
-        timeOnPage?: number | null;
-        referrer?: string | null;
-        id?: string | null;
-      }[]
-    | null;
-  /**
-   * Dados brutos do IP lookup (ipinfo.io)
-   */
-  ipData?:
-    | {
-        [k: string]: unknown;
-      }
-    | unknown[]
-    | string
-    | number
-    | boolean
-    | null;
-  tags?:
-    | {
-        tag?: string | null;
-        id?: string | null;
-      }[]
-    | null;
-  /**
-   * Notas internas sobre este visitante
-   */
-  notes?: string | null;
-  leadStatus?: ('new' | 'interesting' | 'contacted' | 'qualified' | 'discarded') | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
@@ -676,10 +594,6 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'team-members';
         value: number | TeamMember;
-      } | null)
-    | ({
-        relationTo: 'visitors';
-        value: number | Visitor;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -1001,51 +915,6 @@ export interface TeamMembersSelect<T extends boolean = true> {
   bio?: T;
   linkedin?: T;
   order?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "visitors_select".
- */
-export interface VisitorsSelect<T extends boolean = true> {
-  company?: T;
-  domain?: T;
-  visitorId?: T;
-  ip?: T;
-  country?: T;
-  region?: T;
-  city?: T;
-  totalVisits?: T;
-  pagesViewed?: T;
-  totalTimeSeconds?: T;
-  firstSeenAt?: T;
-  lastSeenAt?: T;
-  userAgent?: T;
-  device?: T;
-  referrer?: T;
-  utmSource?: T;
-  utmMedium?: T;
-  utmCampaign?: T;
-  pageViews?:
-    | T
-    | {
-        path?: T;
-        title?: T;
-        viewedAt?: T;
-        timeOnPage?: T;
-        referrer?: T;
-        id?: T;
-      };
-  ipData?: T;
-  tags?:
-    | T
-    | {
-        tag?: T;
-        id?: T;
-      };
-  notes?: T;
-  leadStatus?: T;
   updatedAt?: T;
   createdAt?: T;
 }

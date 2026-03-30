@@ -15,7 +15,7 @@ import { BlogPosts } from './collections/BlogPosts'
 import { Media } from './collections/Media'
 import { Testimonials } from './collections/Testimonials'
 import { TeamMembers } from './collections/TeamMembers'
-import { Visitors } from './collections/Visitors'
+// import { Visitors } from './collections/Visitors' // TODO: re-enable after DB migration
 
 // Globals
 import { SiteSettings } from './globals/SiteSettings'
@@ -43,7 +43,7 @@ export default buildConfig({
     Media,
     Testimonials,
     TeamMembers,
-    Visitors,
+    // Visitors, // TODO: re-enable after DB migration
   ],
   globals: [
     SiteSettings,
