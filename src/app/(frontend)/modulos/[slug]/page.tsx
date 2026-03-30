@@ -40,6 +40,12 @@ export default async function ModuloPage({ params }: Props) {
   const service = await getService(slug)
   if (!service) notFound()
 
+  // Resolve hero image: prefer CMS upload, fallback to URL field, then default
+  const heroImageSrc =
+    (typeof service.heroImage === 'object' && service.heroImage?.url) ||
+    service.heroImageUrl ||
+    '/images/modules/modulos-hero-meeting.jpg'
+
   // Map Payload data to ModulePage props
   const features = (service.features || []).map((f: any) => ({
     icon: f.icon || 'FileText',
@@ -60,7 +66,7 @@ export default async function ModuloPage({ params }: Props) {
       title={service.title}
       subtitle={service.subtitle || service.excerpt}
       description={service.descriptionText || ''}
-      heroImage={service.heroImageUrl || '/images/modules/modulos-hero-meeting.jpg'}
+      heroImage={heroImageSrc}
       heroImageAlt={`${service.title} - Safemed`}
       features={features}
       featuresHeading={service.featuresHeading || `Funcionalidades de ${service.title}`}

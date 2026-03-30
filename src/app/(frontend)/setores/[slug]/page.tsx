@@ -40,6 +40,12 @@ export default async function SetorPage({ params }: Props) {
   const industry = await getIndustry(slug)
   if (!industry) notFound()
 
+  // Resolve hero image: prefer CMS upload, fallback to URL field, then default
+  const heroImageSrc =
+    (typeof industry.heroImage === 'object' && (industry as any).heroImage?.url) ||
+    (industry as any).heroImageUrl ||
+    '/images/modules/modulos-hero-meeting.jpg'
+
   // Map Payload data to ModulePage props
   const features = ((industry as any).features || []).map((f: any) => ({
     icon: f.icon || 'FileText',
@@ -60,7 +66,7 @@ export default async function SetorPage({ params }: Props) {
       title={industry.title}
       subtitle={(industry as any).subtitle || industry.excerpt || ''}
       description={(industry as any).descriptionText || ''}
-      heroImage={(industry as any).heroImageUrl || '/images/modules/modulos-hero-meeting.jpg'}
+      heroImage={heroImageSrc}
       heroImageAlt={`${industry.title} - Safemed`}
       features={features}
       featuresHeading={(industry as any).featuresHeading || `Funcionalidades para ${industry.title}`}
