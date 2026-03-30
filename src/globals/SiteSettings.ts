@@ -40,11 +40,48 @@ export const SiteSettings: GlobalConfig = {
         {
           label: 'Integrações',
           fields: [
-            { name: 'gtmId', type: 'text', label: 'Google Tag Manager ID' },
-            { name: 'gaId', type: 'text', label: 'Google Analytics ID' },
-            { name: 'hubspotId', type: 'text', label: 'HubSpot Tracking Code' },
-            { name: 'mivoEnabled', type: 'checkbox', label: 'Ativar Chat Mivo', defaultValue: true },
-            { name: 'mivoApiUrl', type: 'text', label: 'Mivo API URL' },
+            {
+              type: 'group',
+              name: 'tracking',
+              label: 'Tracking & Analytics',
+              fields: [
+                {
+                  name: 'snitcherId',
+                  type: 'text',
+                  label: 'Snitcher ID',
+                  admin: {
+                    description: 'ID do Snitcher para identificação de visitantes B2B (ex: abc123def456)',
+                  },
+                },
+                {
+                  name: 'gtmId',
+                  type: 'text',
+                  label: 'Google Tag Manager ID',
+                  admin: { description: 'Ex: GTM-XXXXXXX' },
+                },
+                {
+                  name: 'gaId',
+                  type: 'text',
+                  label: 'Google Analytics ID',
+                  admin: { description: 'Ex: G-XXXXXXXXXX' },
+                },
+                {
+                  name: 'hubspotId',
+                  type: 'text',
+                  label: 'HubSpot Tracking Code',
+                  admin: { description: 'ID do portal HubSpot' },
+                },
+              ],
+            },
+            {
+              type: 'group',
+              name: 'mivo',
+              label: 'Mivo Chat',
+              fields: [
+                { name: 'enabled', type: 'checkbox', label: 'Ativar Chat Mivo', defaultValue: true },
+                { name: 'apiUrl', type: 'text', label: 'Mivo API URL' },
+              ],
+            },
           ],
         },
       ],
