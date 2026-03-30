@@ -75,6 +75,7 @@ export interface Config {
     media: Media;
     testimonials: Testimonial;
     'team-members': TeamMember;
+    'job-positions': JobPosition;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -90,6 +91,7 @@ export interface Config {
     media: MediaSelect<false> | MediaSelect<true>;
     testimonials: TestimonialsSelect<false> | TestimonialsSelect<true>;
     'team-members': TeamMembersSelect<false> | TeamMembersSelect<true>;
+    'job-positions': JobPositionsSelect<false> | JobPositionsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -102,10 +104,12 @@ export interface Config {
   globals: {
     'site-settings': SiteSetting;
     navigation: Navigation;
+    'page-content': PageContent;
   };
   globalsSelect: {
     'site-settings': SiteSettingsSelect<false> | SiteSettingsSelect<true>;
     navigation: NavigationSelect<false> | NavigationSelect<true>;
+    'page-content': PageContentSelect<false> | PageContentSelect<true>;
   };
   locale: null;
   widgets: {
@@ -541,6 +545,34 @@ export interface Testimonial {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "job-positions".
+ */
+export interface JobPosition {
+  id: number;
+  title: string;
+  department?: string | null;
+  location?: string | null;
+  type?: ('full-time' | 'part-time' | 'contract' | 'internship') | null;
+  description?: string | null;
+  responsibilities?:
+    | {
+        text?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  requirements?:
+    | {
+        text?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  active?: boolean | null;
+  order?: number | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
@@ -594,6 +626,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'team-members';
         value: number | TeamMember;
+      } | null)
+    | ({
+        relationTo: 'job-positions';
+        value: number | JobPosition;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -920,6 +956,33 @@ export interface TeamMembersSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "job-positions_select".
+ */
+export interface JobPositionsSelect<T extends boolean = true> {
+  title?: T;
+  department?: T;
+  location?: T;
+  type?: T;
+  description?: T;
+  responsibilities?:
+    | T
+    | {
+        text?: T;
+        id?: T;
+      };
+  requirements?:
+    | T
+    | {
+        text?: T;
+        id?: T;
+      };
+  active?: T;
+  order?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv_select".
  */
 export interface PayloadKvSelect<T extends boolean = true> {
@@ -1024,6 +1087,98 @@ export interface Navigation {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "page-content".
+ */
+export interface PageContent {
+  id: number;
+  sobreHeroLabel?: string | null;
+  sobreHeroTitle?: string | null;
+  sobreHeroDescription?: string | null;
+  sobreHeroImage?: (number | null) | Media;
+  sobreMissionTitle?: string | null;
+  sobreMissionText1?: string | null;
+  sobreMissionText2?: string | null;
+  sobreMissionImage?: (number | null) | Media;
+  sobreStats?:
+    | {
+        value: string;
+        label: string;
+        id?: string | null;
+      }[]
+    | null;
+  sobreValuesHeading?: string | null;
+  sobreValues?:
+    | {
+        icon?: string | null;
+        title: string;
+        description?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  sobreVersionsHeading?: string | null;
+  sobreVersionsSubheading?: string | null;
+  sobreVersions?:
+    | {
+        name: string;
+        description?: string | null;
+        features?:
+          | {
+              text?: string | null;
+              id?: string | null;
+            }[]
+          | null;
+        highlight?: boolean | null;
+        id?: string | null;
+      }[]
+    | null;
+  sobreTeamTitle?: string | null;
+  sobreTeamText1?: string | null;
+  sobreTeamText2?: string | null;
+  sobreTeamImage?: (number | null) | Media;
+  sobreCtaTitle?: string | null;
+  sobreCtaText?: string | null;
+  carreirasHeroTitle?: string | null;
+  carreirasHeroDescription?: string | null;
+  carreirasHeroImage?: (number | null) | Media;
+  carreirasCultureHeading?: string | null;
+  carreirasCultureSubheading?: string | null;
+  carreirasCultureValues?:
+    | {
+        icon?: string | null;
+        title: string;
+        description?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  carreirasBenefitsTitle?: string | null;
+  carreirasBenefitsImage?: (number | null) | Media;
+  carreirasBenefits?:
+    | {
+        text?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  carreirasPositionsHeading?: string | null;
+  carreirasCtaTitle?: string | null;
+  carreirasCtaText?: string | null;
+  carreirasCtaEmail?: string | null;
+  contactoHeroTitle?: string | null;
+  contactoHeroDescription?: string | null;
+  contactoPartnerName?: string | null;
+  contactoPartnerDescription?: string | null;
+  contactoPartnerWebsite?: string | null;
+  contactoPartnerEmail?: string | null;
+  contactoPartnerPhone?: string | null;
+  contactoMapEmbed?: string | null;
+  blogHeroTitle?: string | null;
+  blogHeroDescription?: string | null;
+  blogCtaTitle?: string | null;
+  blogCtaText?: string | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "site-settings_select".
  */
 export interface SiteSettingsSelect<T extends boolean = true> {
@@ -1075,6 +1230,98 @@ export interface NavigationSelect<T extends boolean = true> {
         label?: T;
         link?: T;
       };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "page-content_select".
+ */
+export interface PageContentSelect<T extends boolean = true> {
+  sobreHeroLabel?: T;
+  sobreHeroTitle?: T;
+  sobreHeroDescription?: T;
+  sobreHeroImage?: T;
+  sobreMissionTitle?: T;
+  sobreMissionText1?: T;
+  sobreMissionText2?: T;
+  sobreMissionImage?: T;
+  sobreStats?:
+    | T
+    | {
+        value?: T;
+        label?: T;
+        id?: T;
+      };
+  sobreValuesHeading?: T;
+  sobreValues?:
+    | T
+    | {
+        icon?: T;
+        title?: T;
+        description?: T;
+        id?: T;
+      };
+  sobreVersionsHeading?: T;
+  sobreVersionsSubheading?: T;
+  sobreVersions?:
+    | T
+    | {
+        name?: T;
+        description?: T;
+        features?:
+          | T
+          | {
+              text?: T;
+              id?: T;
+            };
+        highlight?: T;
+        id?: T;
+      };
+  sobreTeamTitle?: T;
+  sobreTeamText1?: T;
+  sobreTeamText2?: T;
+  sobreTeamImage?: T;
+  sobreCtaTitle?: T;
+  sobreCtaText?: T;
+  carreirasHeroTitle?: T;
+  carreirasHeroDescription?: T;
+  carreirasHeroImage?: T;
+  carreirasCultureHeading?: T;
+  carreirasCultureSubheading?: T;
+  carreirasCultureValues?:
+    | T
+    | {
+        icon?: T;
+        title?: T;
+        description?: T;
+        id?: T;
+      };
+  carreirasBenefitsTitle?: T;
+  carreirasBenefitsImage?: T;
+  carreirasBenefits?:
+    | T
+    | {
+        text?: T;
+        id?: T;
+      };
+  carreirasPositionsHeading?: T;
+  carreirasCtaTitle?: T;
+  carreirasCtaText?: T;
+  carreirasCtaEmail?: T;
+  contactoHeroTitle?: T;
+  contactoHeroDescription?: T;
+  contactoPartnerName?: T;
+  contactoPartnerDescription?: T;
+  contactoPartnerWebsite?: T;
+  contactoPartnerEmail?: T;
+  contactoPartnerPhone?: T;
+  contactoMapEmbed?: T;
+  blogHeroTitle?: T;
+  blogHeroDescription?: T;
+  blogCtaTitle?: T;
+  blogCtaText?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
