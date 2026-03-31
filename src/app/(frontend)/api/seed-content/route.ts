@@ -137,7 +137,9 @@ DO $$ BEGIN
     SELECT 1 FROM information_schema.columns
     WHERE table_name = 'job_positions' AND column_name = 'type' AND data_type = 'character varying'
   ) THEN
+    ALTER TABLE "job_positions" ALTER COLUMN "type" DROP DEFAULT;
     ALTER TABLE "job_positions" ALTER COLUMN "type" TYPE "enum_job_positions_type" USING "type"::"enum_job_positions_type";
+    ALTER TABLE "job_positions" ALTER COLUMN "type" SET DEFAULT 'full-time';
   END IF;
 END $$;
 `
