@@ -85,6 +85,33 @@ export async function GET(request: Request) {
         idleCount: pool.idleCount,
         waitingCount: pool.waitingCount,
       }
+
+      // Check actual page_content image columns in DB
+      const imgRes = await pool.query(
+        `SELECT sobre_hero_image_id, sobre_mission_image_id, sobre_team_image_id FROM page_content LIMIT 1`
+      )
+      results.pageContentImages = imgRes.rows[0] || 'no rows'
+
+      // Check indexes on page_content
+      const idxRes = await pool.query(
+        `SELECT indexname, indexdef FROM pg_indexes WHERE tablename = 'page_content' ORDER BY indexname`
+      )
+      results.pageContentIndexes = idxRes.rows
+
+      // Check FK constraints on page_content
+      const fkRes = await pool.query(
+        `SELECT conname, pg_get_constraintdef(oid) as def FROM pg_constraint WHERE conrelid = 'page_content'::regclass AND contype = 'f'`
+      )
+      results.pageContentFKs = fkRes.rows
+
+      // Compare with Drizzle schema for page_content
+      const drizzleSchema = (payload.db as any).tables?.page_content
+      if (drizzleSchema) {
+        const drizzleCols = Object.keys(drizzleSchema)
+        results.drizzlePageContentCols = drizzleCols
+      } else {
+        results.drizzlePageContent = 'not found in tables'
+      }
     } catch (e: any) {
       results.dbPool = { error: e.message }
     }
