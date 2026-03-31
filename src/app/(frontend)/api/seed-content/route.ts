@@ -137,12 +137,29 @@ export async function GET(request: Request) {
     )
     const tables = tablesRes.rows.map((r: any) => r.tablename)
 
-    // Check for orphan array tables from old schema
-    const orphans = tables.filter((t: string) =>
-      t.startsWith('page_content_') || t.startsWith('job_positions_') || t.startsWith('_page_content')
-    )
+    // Get schema of site_settings to understand Payload's column naming
+    let siteSettingsSchema: any[] = []
+    try {
+      const res = await pool.query(
+        `SELECT column_name, data_type, is_nullable FROM information_schema.columns WHERE table_name = 'site_settings' ORDER BY ordinal_position`
+      )
+      siteSettingsSchema = res.rows
+    } catch (e: any) {
+      siteSettingsSchema = [{ error: e.message }]
+    }
 
-    // Try reading page_content
+    // Get schema of team_members to understand collection naming
+    let teamMembersSchema: any[] = []
+    try {
+      const res = await pool.query(
+        `SELECT column_name, data_type, is_nullable FROM information_schema.columns WHERE table_name = 'team_members' ORDER BY ordinal_position`
+      )
+      teamMembersSchema = res.rows
+    } catch (e: any) {
+      teamMembersSchema = [{ error: e.message }]
+    }
+
+    // Check page_content and job_positions
     let pageContentStatus = 'unknown'
     try {
       const res = await pool.query('SELECT count(*) FROM page_content')
@@ -151,7 +168,6 @@ export async function GET(request: Request) {
       pageContentStatus = `error: ${e.message}`
     }
 
-    // Try reading job_positions
     let jobPositionsStatus = 'unknown'
     try {
       const res = await pool.query('SELECT count(*) FROM job_positions')
@@ -162,7 +178,8 @@ export async function GET(request: Request) {
 
     return NextResponse.json({
       tables,
-      orphanTables: orphans,
+      siteSettingsSchema,
+      teamMembersSchema,
       pageContent: pageContentStatus,
       jobPositions: jobPositionsStatus,
     })
