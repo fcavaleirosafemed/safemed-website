@@ -53,24 +53,50 @@ export async function GET(request: Request) {
       results.drizzleTables = { error: e.message }
     }
 
-    // Test the admin by calling RootPage directly
-    try {
-      const { RootPage } = await import('@payloadcms/next/views')
-      const { importMap } = await import('@/app/(payload)/admin/importMap')
-      const result = await RootPage({
-        config,
-        importMap,
-        params: Promise.resolve({ segments: [] }),
-        searchParams: Promise.resolve({}),
-      })
-      results.adminRender = { ok: true, type: typeof result }
-    } catch (e: any) {
-      results.adminRender = {
-        error: e.message,
-        stack: e.stack?.split('\n').slice(0, 10),
-        name: e.name,
-        digest: (e as any).digest,
+    // Test the admin by calling RootPage directly with different segment paths
+    for (const segments of [[''], ['login'], ['collections', 'media']]) {
+      const label = segments.join('/') || 'dashboard'
+      try {
+        const { RootPage } = await import('@payloadcms/next/views')
+        const { importMap } = await import('@/app/(payload)/admin/importMap')
+        const result = await RootPage({
+          config,
+          importMap,
+          params: Promise.resolve({ segments }),
+          searchParams: Promise.resolve({}),
+        })
+        results[`admin:${label}`] = { ok: true, type: typeof result }
+      } catch (e: any) {
+        // Check if it's a NEXT_REDIRECT (which is expected behavior)
+        const isRedirect = e.message === 'NEXT_REDIRECT' || e.digest?.startsWith('NEXT_REDIRECT')
+        results[`admin:${label}`] = {
+          error: e.message,
+          isRedirect,
+          digest: (e as any).digest,
+          cause: e.cause ? String(e.cause) : undefined,
+          stack: e.stack?.split('\n').slice(0, 5),
+        }
       }
+    }
+
+    // Check if the handleServerFunctions works
+    try {
+      const { handleServerFunctions } = await import('@payloadcms/next/layouts')
+      results.handleServerFunctions = 'import ok'
+    } catch (e: any) {
+      results.handleServerFunctions = { error: e.message }
+    }
+
+    // Check DB connection pool status
+    try {
+      const pool = (payload.db as any).pool
+      results.dbPool = {
+        totalCount: pool.totalCount,
+        idleCount: pool.idleCount,
+        waitingCount: pool.waitingCount,
+      }
+    } catch (e: any) {
+      results.dbPool = { error: e.message }
     }
 
     return NextResponse.json(results)
