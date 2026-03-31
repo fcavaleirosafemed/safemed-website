@@ -183,88 +183,16 @@ export async function POST(request: Request) {
   try {
     const payload = await getPayload({ config })
 
-    // Create missing tables via raw SQL
+    // Drop manually-created tables so push:true can recreate them properly
     try {
       const pool = (payload.db as any).pool
       if (pool) {
-        // Create page_content table
-        await pool.query(`
-          CREATE TABLE IF NOT EXISTS "page_content" (
-            "id" serial PRIMARY KEY,
-            "sobre_hero_label" varchar,
-            "sobre_hero_title" varchar,
-            "sobre_hero_description" text,
-            "sobre_hero_image_id" integer,
-            "sobre_mission_title" varchar,
-            "sobre_mission_text1" text,
-            "sobre_mission_text2" text,
-            "sobre_mission_image_id" integer,
-            "sobre_stats" jsonb,
-            "sobre_values_heading" varchar,
-            "sobre_values" jsonb,
-            "sobre_versions_heading" varchar,
-            "sobre_versions_subheading" varchar,
-            "sobre_versions" jsonb,
-            "sobre_team_title" varchar,
-            "sobre_team_text1" text,
-            "sobre_team_text2" text,
-            "sobre_team_image_id" integer,
-            "sobre_cta_title" varchar,
-            "sobre_cta_text" text,
-            "carreiras_hero_title" varchar,
-            "carreiras_hero_description" text,
-            "carreiras_hero_image_id" integer,
-            "carreiras_culture_heading" varchar,
-            "carreiras_culture_subheading" text,
-            "carreiras_culture_values" jsonb,
-            "carreiras_benefits_title" varchar,
-            "carreiras_benefits_image_id" integer,
-            "carreiras_benefits" jsonb,
-            "carreiras_positions_heading" varchar,
-            "carreiras_cta_title" varchar,
-            "carreiras_cta_text" text,
-            "carreiras_cta_email" varchar,
-            "contacto_hero_title" varchar,
-            "contacto_hero_description" text,
-            "contacto_partner_name" varchar,
-            "contacto_partner_description" text,
-            "contacto_partner_website" varchar,
-            "contacto_partner_email" varchar,
-            "contacto_partner_phone" varchar,
-            "contacto_map_embed" text,
-            "blog_hero_title" varchar,
-            "blog_hero_description" text,
-            "blog_cta_title" varchar,
-            "blog_cta_text" text,
-            "updated_at" timestamptz DEFAULT now() NOT NULL,
-            "created_at" timestamptz DEFAULT now() NOT NULL
-          )
-        `)
-        results.push('Table page_content: created/exists')
-
-        // Create job_positions table
-        await pool.query(`
-          CREATE TABLE IF NOT EXISTS "job_positions" (
-            "id" serial PRIMARY KEY,
-            "title" varchar NOT NULL,
-            "department" varchar,
-            "location" varchar,
-            "type" varchar DEFAULT 'full-time',
-            "description" text,
-            "responsibilities" jsonb,
-            "requirements" jsonb,
-            "active" boolean DEFAULT true,
-            "order" numeric DEFAULT 0,
-            "updated_at" timestamptz DEFAULT now() NOT NULL,
-            "created_at" timestamptz DEFAULT now() NOT NULL
-          )
-        `)
-        results.push('Table job_positions: created/exists')
-      } else {
-        results.push('DB pool: not available')
+        await pool.query('DROP TABLE IF EXISTS "page_content" CASCADE')
+        await pool.query('DROP TABLE IF EXISTS "job_positions" CASCADE')
+        results.push('Dropped old tables (will be recreated by push:true on next deploy)')
       }
     } catch (e: any) {
-      results.push(`DB tables: ${e.message}`)
+      results.push(`Drop tables: ${e.message}`)
     }
 
     // Seed PageContent — only fill empty fields
