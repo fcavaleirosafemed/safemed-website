@@ -35,6 +35,13 @@ export default buildConfig({
     meta: {
       titleSuffix: ' — Safemed CMS',
     },
+    components: {
+      views: {
+        dashboard: {
+          Component: '/src/components/admin/Dashboard',
+        },
+      },
+    },
   },
   collections: [
     Users,
