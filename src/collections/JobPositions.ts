@@ -56,15 +56,13 @@ export const JobPositions: CollectionConfig = {
     },
     {
       name: 'responsibilities',
-      type: 'array',
-      label: 'Responsabilidades',
-      fields: [{ name: 'text', type: 'text' }],
+      type: 'json',
+      label: 'Responsabilidades (JSON array: [{text}])',
     },
     {
       name: 'requirements',
-      type: 'array',
-      label: 'Requisitos',
-      fields: [{ name: 'text', type: 'text' }],
+      type: 'json',
+      label: 'Requisitos (JSON array: [{text}])',
     },
     {
       name: 'active',

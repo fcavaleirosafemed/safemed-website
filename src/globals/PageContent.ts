@@ -23,49 +23,15 @@ export const PageContent: GlobalConfig = {
             { name: 'sobreMissionText1', type: 'textarea', label: 'Missão - Parágrafo 1' },
             { name: 'sobreMissionText2', type: 'textarea', label: 'Missão - Parágrafo 2' },
             { name: 'sobreMissionImage', type: 'upload', relationTo: 'media', label: 'Imagem Missão' },
-            // Stats
-            {
-              name: 'sobreStats',
-              type: 'array',
-              label: 'Estatísticas',
-              maxRows: 6,
-              fields: [
-                { name: 'value', type: 'text', required: true },
-                { name: 'label', type: 'text', required: true },
-              ],
-            },
+            // Stats — stored as JSON to avoid separate tables
+            { name: 'sobreStats', type: 'json', label: 'Estatísticas (JSON array: [{value, label}])' },
             // Values
             { name: 'sobreValuesHeading', type: 'text', label: 'Título Valores', defaultValue: 'O que nos define' },
-            {
-              name: 'sobreValues',
-              type: 'array',
-              label: 'Valores',
-              maxRows: 8,
-              fields: [
-                { name: 'icon', type: 'text', label: 'Ícone (Lucide)' },
-                { name: 'title', type: 'text', required: true },
-                { name: 'description', type: 'textarea' },
-              ],
-            },
+            { name: 'sobreValues', type: 'json', label: 'Valores (JSON array: [{icon, title, description}])' },
             // Versions
             { name: 'sobreVersionsHeading', type: 'text', label: 'Título Versões', defaultValue: 'Uma solução para cada necessidade' },
             { name: 'sobreVersionsSubheading', type: 'text', label: 'Subtítulo Versões' },
-            {
-              name: 'sobreVersions',
-              type: 'array',
-              label: 'Versões do Produto',
-              maxRows: 5,
-              fields: [
-                { name: 'name', type: 'text', required: true },
-                { name: 'description', type: 'textarea' },
-                {
-                  name: 'features',
-                  type: 'array',
-                  fields: [{ name: 'text', type: 'text' }],
-                },
-                { name: 'highlight', type: 'checkbox', defaultValue: false },
-              ],
-            },
+            { name: 'sobreVersions', type: 'json', label: 'Versões (JSON array: [{name, description, features:[{text}], highlight}])' },
             // Team section
             { name: 'sobreTeamTitle', type: 'text', label: 'Título Equipa', defaultValue: 'Pessoas que fazem a diferença' },
             { name: 'sobreTeamText1', type: 'textarea', label: 'Equipa - Parágrafo 1' },
@@ -86,29 +52,13 @@ export const PageContent: GlobalConfig = {
             // Culture
             { name: 'carreirasCultureHeading', type: 'text', label: 'Título Cultura', defaultValue: 'O que nos move' },
             { name: 'carreirasCultureSubheading', type: 'textarea', label: 'Subtítulo Cultura' },
-            {
-              name: 'carreirasCultureValues',
-              type: 'array',
-              label: 'Valores da Cultura',
-              maxRows: 8,
-              fields: [
-                { name: 'icon', type: 'text', label: 'Ícone (Lucide)' },
-                { name: 'title', type: 'text', required: true },
-                { name: 'description', type: 'textarea' },
-              ],
-            },
+            { name: 'carreirasCultureValues', type: 'json', label: 'Valores Cultura (JSON array: [{icon, title, description}])' },
             // Benefits
             { name: 'carreirasBenefitsTitle', type: 'text', label: 'Título Benefícios', defaultValue: 'Porque trabalhar na Safemed' },
             { name: 'carreirasBenefitsImage', type: 'upload', relationTo: 'media', label: 'Imagem Benefícios' },
-            {
-              name: 'carreirasBenefits',
-              type: 'array',
-              label: 'Lista de Benefícios',
-              fields: [{ name: 'text', type: 'text' }],
-            },
+            { name: 'carreirasBenefits', type: 'json', label: 'Benefícios (JSON array: [{text}])' },
             // Positions section headings
             { name: 'carreirasPositionsHeading', type: 'text', label: 'Título Vagas', defaultValue: 'Posições disponíveis' },
-            // Positions are managed in a separate collection
             // Spontaneous CTA
             { name: 'carreirasCtaTitle', type: 'text', label: 'Título CTA', defaultValue: 'Não encontrou a vaga ideal?' },
             { name: 'carreirasCtaText', type: 'textarea', label: 'Texto CTA' },
