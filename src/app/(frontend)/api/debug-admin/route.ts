@@ -13,6 +13,26 @@ export async function GET(request: Request) {
   try {
     const payload = await getPayload({ config })
     results.payloadInit = 'ok'
+    results.payloadVersion = (payload as any).version || 'unknown'
+
+    // Check dashboard config
+    const dashboardConfig = payload.config.admin?.components?.views?.dashboard
+    results.dashboardConfig = dashboardConfig ? {
+      Component: dashboardConfig.Component,
+      hasComponent: !!dashboardConfig.Component,
+    } : 'not configured'
+
+    // Check the admin.dashboard (widgets)
+    const dashboardWidgets = payload.config.admin?.dashboard
+    results.dashboardWidgets = dashboardWidgets ? {
+      widgetCount: dashboardWidgets.widgets?.length || 0,
+      widgetSlugs: dashboardWidgets.widgets?.map((w: any) => w.slug) || [],
+    } : 'not configured'
+
+    // Check importMap
+    const importMapKeys = Object.keys(payload.importMap || {})
+    results.importMapKeys = importMapKeys
+    results.hasDashboardInImportMap = importMapKeys.some(k => k.toLowerCase().includes('dashboard'))
 
     // Test each global
     for (const globalSlug of ['site-settings', 'navigation', 'page-content']) {
@@ -20,7 +40,7 @@ export async function GET(request: Request) {
         const data = await payload.findGlobal({ slug: globalSlug as any })
         results[`global:${globalSlug}`] = { ok: true, id: (data as any)?.id }
       } catch (e: any) {
-        results[`global:${globalSlug}`] = { error: e.message, stack: e.stack?.split('\n').slice(0, 5) }
+        results[`global:${globalSlug}`] = { error: e.message }
       }
     }
 
@@ -30,64 +50,34 @@ export async function GET(request: Request) {
         const data = await payload.find({ collection: colSlug as any, limit: 1 })
         results[`collection:${colSlug}`] = { ok: true, totalDocs: data.totalDocs }
       } catch (e: any) {
-        results[`collection:${colSlug}`] = { error: e.message, stack: e.stack?.split('\n').slice(0, 5) }
+        results[`collection:${colSlug}`] = { error: e.message }
       }
     }
 
-    // Test DB schema introspection (what Drizzle sees)
-    const pool = (payload.db as any).pool
+    // Test payload-locked-documents (used by CollectionCards)
     try {
-      const enumRes = await pool.query(
-        `SELECT typname, enumlabel FROM pg_enum JOIN pg_type ON pg_enum.enumtypid = pg_type.oid ORDER BY typname, enumsortorder`
-      )
-      results.enums = enumRes.rows
+      const lockedDocs = await payload.find({
+        collection: 'payload-locked-documents' as any,
+        depth: 1,
+        pagination: false,
+        select: { globalSlug: true, updatedAt: true, user: true },
+        where: { globalSlug: { exists: true } },
+      })
+      results['locked-documents'] = { ok: true, totalDocs: lockedDocs.totalDocs }
     } catch (e: any) {
-      results.enums = { error: e.message }
+      results['locked-documents'] = { error: e.message, stack: e.stack?.split('\n').slice(0, 3) }
     }
 
-    // Check Drizzle schema tables
+    // Test getAccessResults (used by CollectionCards)
     try {
-      const drizzleTables = Object.keys((payload.db as any).tables || {})
-      results.drizzleTables = drizzleTables
+      const { getAccessResults } = await import('payload')
+      // We can't call this without a proper req, but we can check it exists
+      results.getAccessResults = 'import ok'
     } catch (e: any) {
-      results.drizzleTables = { error: e.message }
+      results.getAccessResults = { error: e.message }
     }
 
-    // Test the admin by calling RootPage directly with different segment paths
-    for (const segments of [[''], ['login'], ['collections', 'media']]) {
-      const label = segments.join('/') || 'dashboard'
-      try {
-        const { RootPage } = await import('@payloadcms/next/views')
-        const { importMap } = await import('@/app/(payload)/admin/importMap')
-        const result = await RootPage({
-          config,
-          importMap,
-          params: Promise.resolve({ segments }),
-          searchParams: Promise.resolve({}),
-        })
-        results[`admin:${label}`] = { ok: true, type: typeof result }
-      } catch (e: any) {
-        // Check if it's a NEXT_REDIRECT (which is expected behavior)
-        const isRedirect = e.message === 'NEXT_REDIRECT' || e.digest?.startsWith('NEXT_REDIRECT')
-        results[`admin:${label}`] = {
-          error: e.message,
-          isRedirect,
-          digest: (e as any).digest,
-          cause: e.cause ? String(e.cause) : undefined,
-          stack: e.stack?.split('\n').slice(0, 5),
-        }
-      }
-    }
-
-    // Check if the handleServerFunctions works
-    try {
-      const { handleServerFunctions } = await import('@payloadcms/next/layouts')
-      results.handleServerFunctions = 'import ok'
-    } catch (e: any) {
-      results.handleServerFunctions = { error: e.message }
-    }
-
-    // Check DB connection pool status
+    // Check DB pool status
     try {
       const pool = (payload.db as any).pool
       results.dbPool = {
@@ -97,6 +87,27 @@ export async function GET(request: Request) {
       }
     } catch (e: any) {
       results.dbPool = { error: e.message }
+    }
+
+    // Try to render the dashboard view
+    try {
+      const { RootPage } = await import('@payloadcms/next/views')
+      const { importMap } = await import('@/app/(payload)/admin/importMap')
+      const result = await RootPage({
+        config,
+        importMap,
+        params: Promise.resolve({ segments: [''] }),
+        searchParams: Promise.resolve({}),
+      })
+      results['admin:render'] = { ok: true, type: typeof result }
+    } catch (e: any) {
+      const isRedirect = e.message === 'NEXT_REDIRECT' || e.digest?.startsWith('NEXT_REDIRECT')
+      results['admin:render'] = {
+        error: e.message,
+        isRedirect,
+        digest: (e as any).digest,
+        stack: e.stack?.split('\n').slice(0, 5),
+      }
     }
 
     return NextResponse.json(results)
