@@ -144,7 +144,7 @@ END $$;
 
 // SQL to create missing tables matching Payload's Drizzle schema
 const CREATE_PAGE_CONTENT_SQL = `
-CREATE TABLE IF NOT EXISTS "page_content" (`
+CREATE TABLE IF NOT EXISTS "page_content" (
   "id" serial PRIMARY KEY NOT NULL,
   "sobre_hero_label" varchar,
   "sobre_hero_title" varchar,
