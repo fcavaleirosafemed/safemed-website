@@ -196,13 +196,44 @@ async function seedPageContent(token: string) {
       'Acompanhe-nos nas redes sociais para receber as últimas notícias sobre SST e as atualizações da plataforma Safemed.',
   }
 
+  // Fetch current state so we only fill in empty fields
+  const currentRes = await fetch(`${API}/api/globals/page-content`, {
+    headers: { Authorization: `JWT ${token}` },
+  })
+
+  let merged = { ...body }
+
+  if (currentRes.ok) {
+    const current = await currentRes.json()
+    console.log('📖 Existing PageContent found — merging (keeping CMS edits)')
+
+    for (const [key, seedValue] of Object.entries(body)) {
+      const cmsValue = current[key]
+      // Keep CMS value if it's truthy (non-null, non-empty string, non-empty array)
+      const hasValue =
+        cmsValue !== null &&
+        cmsValue !== undefined &&
+        cmsValue !== '' &&
+        !(Array.isArray(cmsValue) && cmsValue.length === 0)
+
+      if (hasValue) {
+        ;(merged as any)[key] = cmsValue
+        // Don't log every field, just count
+      } else {
+        console.log(`  → Seeding empty field: ${key}`)
+      }
+    }
+  } else {
+    console.log('📝 No existing PageContent — creating from scratch')
+  }
+
   const res = await fetch(`${API}/api/globals/page-content`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       Authorization: `JWT ${token}`,
     },
-    body: JSON.stringify(body),
+    body: JSON.stringify(merged),
   })
 
   if (!res.ok) {
@@ -210,7 +241,7 @@ async function seedPageContent(token: string) {
     throw new Error(`Failed to seed page-content: ${res.status} — ${text}`)
   }
 
-  console.log('✅ PageContent global seeded successfully')
+  console.log('✅ PageContent global seeded successfully (existing edits preserved)')
 }
 
 async function seedJobPositions(token: string) {
