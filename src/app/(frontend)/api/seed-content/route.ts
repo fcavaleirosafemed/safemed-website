@@ -121,6 +121,56 @@ const JOB_POSITIONS = [
   },
 ]
 
+export async function GET(request: Request) {
+  const authHeader = request.headers.get('authorization')
+  if (authHeader !== 'Bearer seed-safemed-2024') {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
+
+  try {
+    const payload = await getPayload({ config })
+    const pool = (payload.db as any).pool
+
+    // List all tables
+    const tablesRes = await pool.query(
+      `SELECT tablename FROM pg_tables WHERE schemaname = 'public' ORDER BY tablename`
+    )
+    const tables = tablesRes.rows.map((r: any) => r.tablename)
+
+    // Check for orphan array tables from old schema
+    const orphans = tables.filter((t: string) =>
+      t.startsWith('page_content_') || t.startsWith('job_positions_') || t.startsWith('_page_content')
+    )
+
+    // Try reading page_content
+    let pageContentStatus = 'unknown'
+    try {
+      const res = await pool.query('SELECT count(*) FROM page_content')
+      pageContentStatus = `ok (${res.rows[0].count} rows)`
+    } catch (e: any) {
+      pageContentStatus = `error: ${e.message}`
+    }
+
+    // Try reading job_positions
+    let jobPositionsStatus = 'unknown'
+    try {
+      const res = await pool.query('SELECT count(*) FROM job_positions')
+      jobPositionsStatus = `ok (${res.rows[0].count} rows)`
+    } catch (e: any) {
+      jobPositionsStatus = `error: ${e.message}`
+    }
+
+    return NextResponse.json({
+      tables,
+      orphanTables: orphans,
+      pageContent: pageContentStatus,
+      jobPositions: jobPositionsStatus,
+    })
+  } catch (e: any) {
+    return NextResponse.json({ error: e.message }, { status: 500 })
+  }
+}
+
 export async function POST(request: Request) {
   // Simple auth check
   const authHeader = request.headers.get('authorization')

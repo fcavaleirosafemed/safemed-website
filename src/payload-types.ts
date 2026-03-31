@@ -556,15 +556,21 @@ export interface JobPosition {
   description?: string | null;
   responsibilities?:
     | {
-        text?: string | null;
-        id?: string | null;
-      }[]
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
     | null;
   requirements?:
     | {
-        text?: string | null;
-        id?: string | null;
-      }[]
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
     | null;
   active?: boolean | null;
   order?: number | null;
@@ -964,18 +970,8 @@ export interface JobPositionsSelect<T extends boolean = true> {
   location?: T;
   type?: T;
   description?: T;
-  responsibilities?:
-    | T
-    | {
-        text?: T;
-        id?: T;
-      };
-  requirements?:
-    | T
-    | {
-        text?: T;
-        id?: T;
-      };
+  responsibilities?: T;
+  requirements?: T;
   active?: T;
   order?: T;
   updatedAt?: T;
@@ -1101,35 +1097,33 @@ export interface PageContent {
   sobreMissionImage?: (number | null) | Media;
   sobreStats?:
     | {
-        value: string;
-        label: string;
-        id?: string | null;
-      }[]
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
     | null;
   sobreValuesHeading?: string | null;
   sobreValues?:
     | {
-        icon?: string | null;
-        title: string;
-        description?: string | null;
-        id?: string | null;
-      }[]
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
     | null;
   sobreVersionsHeading?: string | null;
   sobreVersionsSubheading?: string | null;
   sobreVersions?:
     | {
-        name: string;
-        description?: string | null;
-        features?:
-          | {
-              text?: string | null;
-              id?: string | null;
-            }[]
-          | null;
-        highlight?: boolean | null;
-        id?: string | null;
-      }[]
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
     | null;
   sobreTeamTitle?: string | null;
   sobreTeamText1?: string | null;
@@ -1144,19 +1138,23 @@ export interface PageContent {
   carreirasCultureSubheading?: string | null;
   carreirasCultureValues?:
     | {
-        icon?: string | null;
-        title: string;
-        description?: string | null;
-        id?: string | null;
-      }[]
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
     | null;
   carreirasBenefitsTitle?: string | null;
   carreirasBenefitsImage?: (number | null) | Media;
   carreirasBenefits?:
     | {
-        text?: string | null;
-        id?: string | null;
-      }[]
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
     | null;
   carreirasPositionsHeading?: string | null;
   carreirasCtaTitle?: string | null;
@@ -1247,38 +1245,12 @@ export interface PageContentSelect<T extends boolean = true> {
   sobreMissionText1?: T;
   sobreMissionText2?: T;
   sobreMissionImage?: T;
-  sobreStats?:
-    | T
-    | {
-        value?: T;
-        label?: T;
-        id?: T;
-      };
+  sobreStats?: T;
   sobreValuesHeading?: T;
-  sobreValues?:
-    | T
-    | {
-        icon?: T;
-        title?: T;
-        description?: T;
-        id?: T;
-      };
+  sobreValues?: T;
   sobreVersionsHeading?: T;
   sobreVersionsSubheading?: T;
-  sobreVersions?:
-    | T
-    | {
-        name?: T;
-        description?: T;
-        features?:
-          | T
-          | {
-              text?: T;
-              id?: T;
-            };
-        highlight?: T;
-        id?: T;
-      };
+  sobreVersions?: T;
   sobreTeamTitle?: T;
   sobreTeamText1?: T;
   sobreTeamText2?: T;
@@ -1290,22 +1262,10 @@ export interface PageContentSelect<T extends boolean = true> {
   carreirasHeroImage?: T;
   carreirasCultureHeading?: T;
   carreirasCultureSubheading?: T;
-  carreirasCultureValues?:
-    | T
-    | {
-        icon?: T;
-        title?: T;
-        description?: T;
-        id?: T;
-      };
+  carreirasCultureValues?: T;
   carreirasBenefitsTitle?: T;
   carreirasBenefitsImage?: T;
-  carreirasBenefits?:
-    | T
-    | {
-        text?: T;
-        id?: T;
-      };
+  carreirasBenefits?: T;
   carreirasPositionsHeading?: T;
   carreirasCtaTitle?: T;
   carreirasCtaText?: T;
