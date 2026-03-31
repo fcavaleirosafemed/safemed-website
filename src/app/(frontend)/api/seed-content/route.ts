@@ -183,18 +183,6 @@ export async function POST(request: Request) {
   try {
     const payload = await getPayload({ config })
 
-    // Drop manually-created tables so push:true can recreate them properly
-    try {
-      const pool = (payload.db as any).pool
-      if (pool) {
-        await pool.query('DROP TABLE IF EXISTS "page_content" CASCADE')
-        await pool.query('DROP TABLE IF EXISTS "job_positions" CASCADE')
-        results.push('Dropped old tables (will be recreated by push:true on next deploy)')
-      }
-    } catch (e: any) {
-      results.push(`Drop tables: ${e.message}`)
-    }
-
     // Seed PageContent — only fill empty fields
     try {
       let current: any = null

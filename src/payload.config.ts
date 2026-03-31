@@ -15,13 +15,13 @@ import { BlogPosts } from './collections/BlogPosts'
 import { Media } from './collections/Media'
 import { Testimonials } from './collections/Testimonials'
 import { TeamMembers } from './collections/TeamMembers'
-// import { JobPositions } from './collections/JobPositions'
+import { JobPositions } from './collections/JobPositions'
 // import { Visitors } from './collections/Visitors' // TODO: re-enable after DB migration
 
 // Globals
 import { SiteSettings } from './globals/SiteSettings'
 import { Navigation } from './globals/Navigation'
-// import { PageContent } from './globals/PageContent'
+import { PageContent } from './globals/PageContent'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -45,13 +45,13 @@ export default buildConfig({
     Media,
     Testimonials,
     TeamMembers,
-    // JobPositions,
+    JobPositions,
     // Visitors, // TODO: re-enable after DB migration
   ],
   globals: [
     SiteSettings,
     Navigation,
-    // PageContent,
+    PageContent,
   ],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || 'default-secret-change-me',
