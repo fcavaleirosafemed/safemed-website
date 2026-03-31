@@ -133,6 +133,18 @@ export async function POST(request: Request) {
   try {
     const payload = await getPayload({ config })
 
+    // Force schema push to create missing tables
+    try {
+      if (typeof (payload.db as any).push === 'function') {
+        await (payload.db as any).push({ forceAcceptWarning: true })
+        results.push('DB push: completed')
+      } else {
+        results.push('DB push: not available')
+      }
+    } catch (e: any) {
+      results.push(`DB push: ${e.message}`)
+    }
+
     // Seed PageContent — only fill empty fields
     try {
       let current: any = null
