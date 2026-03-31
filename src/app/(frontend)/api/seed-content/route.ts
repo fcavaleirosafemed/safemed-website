@@ -121,9 +121,30 @@ const JOB_POSITIONS = [
   },
 ]
 
+// SQL to create the enum type for job_positions.type select field
+const CREATE_ENUM_SQL = `
+DO $$ BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'enum_job_positions_type') THEN
+    CREATE TYPE "enum_job_positions_type" AS ENUM ('full-time', 'part-time', 'contract', 'internship');
+  END IF;
+END $$;
+`
+
+// SQL to alter job_positions.type column from varchar to enum (if needed)
+const ALTER_TYPE_COLUMN_SQL = `
+DO $$ BEGIN
+  IF EXISTS (
+    SELECT 1 FROM information_schema.columns
+    WHERE table_name = 'job_positions' AND column_name = 'type' AND data_type = 'character varying'
+  ) THEN
+    ALTER TABLE "job_positions" ALTER COLUMN "type" TYPE "enum_job_positions_type" USING "type"::"enum_job_positions_type";
+  END IF;
+END $$;
+`
+
 // SQL to create missing tables matching Payload's Drizzle schema
 const CREATE_PAGE_CONTENT_SQL = `
-CREATE TABLE IF NOT EXISTS "page_content" (
+CREATE TABLE IF NOT EXISTS "page_content" (`
   "id" serial PRIMARY KEY NOT NULL,
   "sobre_hero_label" varchar,
   "sobre_hero_title" varchar,
@@ -181,7 +202,7 @@ CREATE TABLE IF NOT EXISTS "job_positions" (
   "title" varchar NOT NULL,
   "department" varchar,
   "location" varchar DEFAULT 'Porto',
-  "type" varchar DEFAULT 'full-time',
+  "type" "enum_job_positions_type" DEFAULT 'full-time',
   "description" varchar,
   "responsibilities" jsonb,
   "requirements" jsonb,
@@ -258,6 +279,14 @@ export async function POST(request: Request) {
     const payload = await getPayload({ config })
     const pool = (payload.db as any).pool
 
+    // Step 0: Create enum types
+    try {
+      await pool.query(CREATE_ENUM_SQL)
+      results.push('enum_job_positions_type: created or already exists')
+    } catch (e: any) {
+      results.push(`enum ERROR: ${e.message}`)
+    }
+
     // Step 1: Create tables if they don't exist
     try {
       await pool.query(CREATE_PAGE_CONTENT_SQL)
@@ -271,6 +300,14 @@ export async function POST(request: Request) {
       results.push('job_positions table: created or already exists')
     } catch (e: any) {
       results.push(`job_positions table ERROR: ${e.message}`)
+    }
+
+    // Step 1.5: Fix type column if it's varchar instead of enum
+    try {
+      await pool.query(ALTER_TYPE_COLUMN_SQL)
+      results.push('job_positions.type column: verified/fixed')
+    } catch (e: any) {
+      results.push(`type column fix ERROR: ${e.message}`)
     }
 
     // Step 2: Seed PageContent — only fill empty fields
