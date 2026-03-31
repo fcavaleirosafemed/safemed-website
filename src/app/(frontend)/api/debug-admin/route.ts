@@ -53,6 +53,27 @@ export async function GET(request: Request) {
       results.drizzleTables = { error: e.message }
     }
 
+    // Test the admin RSC render by fetching it server-side
+    try {
+      const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL || process.env.RAILWAY_PUBLIC_DOMAIN
+        ? `https://${process.env.RAILWAY_PUBLIC_DOMAIN}`
+        : 'http://localhost:3000'
+      const adminRes = await fetch(`${baseUrl}/admin`, {
+        headers: { 'RSC': '1' },
+      })
+      results.adminRSC = {
+        status: adminRes.status,
+        ok: adminRes.ok,
+        contentType: adminRes.headers.get('content-type'),
+      }
+      if (!adminRes.ok) {
+        const text = await adminRes.text()
+        results.adminRSCBody = text.substring(0, 1000)
+      }
+    } catch (e: any) {
+      results.adminRSC = { error: e.message }
+    }
+
     return NextResponse.json(results)
   } catch (e: any) {
     return NextResponse.json({
