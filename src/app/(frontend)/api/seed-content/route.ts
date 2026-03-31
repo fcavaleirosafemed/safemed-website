@@ -304,7 +304,41 @@ export async function POST(request: Request) {
       results.push(`job_positions table ERROR: ${e.message}`)
     }
 
-    // Step 1.5: Fix type column if it's varchar instead of enum
+    // Step 1.5: Fix payload_locked_documents_rels missing job_positions_id column
+    try {
+      const colCheck = await pool.query(
+        `SELECT column_name FROM information_schema.columns WHERE table_name = 'payload_locked_documents_rels' AND column_name = 'job_positions_id'`
+      )
+      if (colCheck.rows.length === 0) {
+        await pool.query(
+          `ALTER TABLE "payload_locked_documents_rels" ADD COLUMN "job_positions_id" integer REFERENCES "job_positions"("id") ON DELETE CASCADE`
+        )
+        results.push('payload_locked_documents_rels: added job_positions_id column')
+      } else {
+        results.push('payload_locked_documents_rels: job_positions_id column already exists')
+      }
+    } catch (e: any) {
+      results.push(`locked_documents_rels fix ERROR: ${e.message}`)
+    }
+
+    // Also fix payload_preferences_rels if it's missing job_positions_id
+    try {
+      const colCheck = await pool.query(
+        `SELECT column_name FROM information_schema.columns WHERE table_name = 'payload_preferences_rels' AND column_name = 'job_positions_id'`
+      )
+      if (colCheck.rows.length === 0) {
+        await pool.query(
+          `ALTER TABLE "payload_preferences_rels" ADD COLUMN "job_positions_id" integer REFERENCES "job_positions"("id") ON DELETE CASCADE`
+        )
+        results.push('payload_preferences_rels: added job_positions_id column')
+      } else {
+        results.push('payload_preferences_rels: job_positions_id column already exists')
+      }
+    } catch (e: any) {
+      results.push(`preferences_rels fix ERROR: ${e.message}`)
+    }
+
+    // Step 1.6: Fix type column if it's varchar instead of enum
     try {
       await pool.query(ALTER_TYPE_COLUMN_SQL)
       results.push('job_positions.type column: verified/fixed')
