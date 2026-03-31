@@ -5,9 +5,17 @@ import type { Metadata } from 'next'
 
 export const dynamic = 'force-dynamic'
 
+async function getContent() {
+  try {
+    const payload = await getPayload({ config })
+    return await payload.findGlobal({ slug: 'page-content' }) as any
+  } catch {
+    return null
+  }
+}
+
 export async function generateMetadata(): Promise<Metadata> {
-  const payload = await getPayload({ config })
-  const content = await payload.findGlobal({ slug: 'page-content' }) as any
+  const content = await getContent()
   return {
     title: content?.sobreHeroTitle || 'Sobre Nós — Safemed',
     description: content?.sobreHeroDescription || 'A Safemed Solutions é uma empresa jovem e inovadora, especialista em soluções SaaS de gestão de saúde, segurança e bem-estar no trabalho.',
@@ -15,8 +23,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function SobrePage() {
-  const payload = await getPayload({ config })
-  const content = await payload.findGlobal({ slug: 'page-content' }) as any
+  const content = await getContent()
 
   return (
     <SobrePageClient

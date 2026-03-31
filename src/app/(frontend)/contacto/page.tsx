@@ -5,9 +5,21 @@ import type { Metadata } from 'next'
 
 export const dynamic = 'force-dynamic'
 
+async function getContent() {
+  try {
+    const payload = await getPayload({ config })
+    const [content, settings] = await Promise.all([
+      payload.findGlobal({ slug: 'page-content' }),
+      payload.findGlobal({ slug: 'site-settings' }),
+    ])
+    return { content: content as any, settings: settings as any }
+  } catch {
+    return { content: null, settings: null }
+  }
+}
+
 export async function generateMetadata(): Promise<Metadata> {
-  const payload = await getPayload({ config })
-  const content = await payload.findGlobal({ slug: 'page-content' }) as any
+  const { content } = await getContent()
   return {
     title: content?.contactoHeroTitle || 'Contacto — Safemed',
     description: content?.contactoHeroDescription || 'Entre em contacto com a Safemed. Estamos disponíveis para ajudar.',
@@ -15,11 +27,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function ContactoPage() {
-  const payload = await getPayload({ config })
-  const [content, settings] = await Promise.all([
-    payload.findGlobal({ slug: 'page-content' }),
-    payload.findGlobal({ slug: 'site-settings' }),
-  ]) as [any, any]
+  const { content, settings } = await getContent()
 
   return (
     <ContactoPageClient

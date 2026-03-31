@@ -5,9 +5,26 @@ import type { Metadata } from 'next'
 
 export const dynamic = 'force-dynamic'
 
+async function getContent() {
+  try {
+    const payload = await getPayload({ config })
+    const [content, positionsResult] = await Promise.all([
+      payload.findGlobal({ slug: 'page-content' }),
+      payload.find({
+        collection: 'job-positions',
+        where: { active: { equals: true } },
+        sort: 'order',
+        limit: 50,
+      }),
+    ])
+    return { content: content as any, positions: positionsResult.docs }
+  } catch {
+    return { content: null, positions: [] }
+  }
+}
+
 export async function generateMetadata(): Promise<Metadata> {
-  const payload = await getPayload({ config })
-  const content = await payload.findGlobal({ slug: 'page-content' }) as any
+  const { content } = await getContent()
   return {
     title: content?.carreirasHeroTitle || 'Carreiras — Safemed',
     description: content?.carreirasHeroDescription || 'Junte-se à equipa Safemed. Estamos a construir o futuro da segurança e saúde no trabalho.',
@@ -15,25 +32,16 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function CarreirasPage() {
-  const payload = await getPayload({ config })
-  const [content, positionsResult] = await Promise.all([
-    payload.findGlobal({ slug: 'page-content' }),
-    payload.find({
-      collection: 'job-positions',
-      where: { active: { equals: true } },
-      sort: 'order',
-      limit: 50,
-    }),
-  ]) as [any, any]
+  const { content, positions: rawPositions } = await getContent()
 
-  const positions = positionsResult.docs.map((p: any) => ({
+  const positions = (rawPositions as any[]).map((p: any) => ({
     title: p.title,
     department: p.department,
     location: p.location,
     type: p.type,
     description: p.description,
-    responsibilities: p.responsibilities?.map((r: any) => ({ text: r.text })),
-    requirements: p.requirements?.map((r: any) => ({ text: r.text })),
+    responsibilities: p.responsibilities,
+    requirements: p.requirements,
   }))
 
   return (

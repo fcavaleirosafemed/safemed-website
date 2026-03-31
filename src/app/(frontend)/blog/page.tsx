@@ -5,9 +5,26 @@ import type { Metadata } from 'next'
 
 export const dynamic = 'force-dynamic'
 
+async function getContent() {
+  try {
+    const payload = await getPayload({ config })
+    const [content, postsResult] = await Promise.all([
+      payload.findGlobal({ slug: 'page-content' }),
+      payload.find({
+        collection: 'blog-posts',
+        sort: '-publishedAt',
+        limit: 20,
+        where: { _status: { equals: 'published' } },
+      }),
+    ])
+    return { content: content as any, posts: postsResult.docs }
+  } catch {
+    return { content: null, posts: [] }
+  }
+}
+
 export async function generateMetadata(): Promise<Metadata> {
-  const payload = await getPayload({ config })
-  const content = await payload.findGlobal({ slug: 'page-content' }) as any
+  const { content } = await getContent()
   return {
     title: content?.blogHeroTitle || 'Blog — Safemed',
     description: content?.blogHeroDescription || 'Notícias e artigos sobre segurança e saúde no trabalho.',
@@ -15,18 +32,9 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function BlogPage() {
-  const payload = await getPayload({ config })
-  const [content, postsResult] = await Promise.all([
-    payload.findGlobal({ slug: 'page-content' }),
-    payload.find({
-      collection: 'blog-posts',
-      sort: '-publishedAt',
-      limit: 20,
-      where: { _status: { equals: 'published' } },
-    }),
-  ]) as [any, any]
+  const { content, posts } = await getContent()
 
-  const articles = postsResult.docs.map((post: any) => ({
+  const articles = (posts as any[]).map((post: any) => ({
     slug: post.slug,
     title: post.title,
     excerpt: post.excerpt,
@@ -38,11 +46,11 @@ export default async function BlogPage() {
 
   return (
     <BlogPageClient
-      heroTitle={(content as any)?.blogHeroTitle}
-      heroDescription={(content as any)?.blogHeroDescription}
+      heroTitle={content?.blogHeroTitle}
+      heroDescription={content?.blogHeroDescription}
       articles={articles}
-      ctaTitle={(content as any)?.blogCtaTitle}
-      ctaText={(content as any)?.blogCtaText}
+      ctaTitle={content?.blogCtaTitle}
+      ctaText={content?.blogCtaText}
     />
   )
 }
