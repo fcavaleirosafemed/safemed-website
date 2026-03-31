@@ -121,6 +121,77 @@ const JOB_POSITIONS = [
   },
 ]
 
+// SQL to create missing tables matching Payload's Drizzle schema
+const CREATE_PAGE_CONTENT_SQL = `
+CREATE TABLE IF NOT EXISTS "page_content" (
+  "id" serial PRIMARY KEY NOT NULL,
+  "sobre_hero_label" varchar,
+  "sobre_hero_title" varchar,
+  "sobre_hero_description" varchar,
+  "sobre_hero_image_id" integer REFERENCES "media"("id") ON DELETE SET NULL,
+  "sobre_mission_title" varchar,
+  "sobre_mission_text1" varchar,
+  "sobre_mission_text2" varchar,
+  "sobre_mission_image_id" integer REFERENCES "media"("id") ON DELETE SET NULL,
+  "sobre_stats" jsonb,
+  "sobre_values_heading" varchar,
+  "sobre_values" jsonb,
+  "sobre_versions_heading" varchar,
+  "sobre_versions_subheading" varchar,
+  "sobre_versions" jsonb,
+  "sobre_team_title" varchar,
+  "sobre_team_text1" varchar,
+  "sobre_team_text2" varchar,
+  "sobre_team_image_id" integer REFERENCES "media"("id") ON DELETE SET NULL,
+  "sobre_cta_title" varchar,
+  "sobre_cta_text" varchar,
+  "carreiras_hero_title" varchar,
+  "carreiras_hero_description" varchar,
+  "carreiras_hero_image_id" integer REFERENCES "media"("id") ON DELETE SET NULL,
+  "carreiras_culture_heading" varchar,
+  "carreiras_culture_subheading" varchar,
+  "carreiras_culture_values" jsonb,
+  "carreiras_benefits_title" varchar,
+  "carreiras_benefits_image_id" integer REFERENCES "media"("id") ON DELETE SET NULL,
+  "carreiras_benefits" jsonb,
+  "carreiras_positions_heading" varchar,
+  "carreiras_cta_title" varchar,
+  "carreiras_cta_text" varchar,
+  "carreiras_cta_email" varchar,
+  "contacto_hero_title" varchar,
+  "contacto_hero_description" varchar,
+  "contacto_partner_name" varchar,
+  "contacto_partner_description" varchar,
+  "contacto_partner_website" varchar,
+  "contacto_partner_email" varchar,
+  "contacto_partner_phone" varchar,
+  "contacto_map_embed" varchar,
+  "blog_hero_title" varchar,
+  "blog_hero_description" varchar,
+  "blog_cta_title" varchar,
+  "blog_cta_text" varchar,
+  "updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
+  "created_at" timestamp(3) with time zone DEFAULT now() NOT NULL
+);
+`
+
+const CREATE_JOB_POSITIONS_SQL = `
+CREATE TABLE IF NOT EXISTS "job_positions" (
+  "id" serial PRIMARY KEY NOT NULL,
+  "title" varchar NOT NULL,
+  "department" varchar,
+  "location" varchar DEFAULT 'Porto',
+  "type" varchar DEFAULT 'full-time',
+  "description" varchar,
+  "responsibilities" jsonb,
+  "requirements" jsonb,
+  "active" boolean DEFAULT true,
+  "order" numeric DEFAULT 0,
+  "updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
+  "created_at" timestamp(3) with time zone DEFAULT now() NOT NULL
+);
+`
+
 export async function GET(request: Request) {
   const authHeader = request.headers.get('authorization')
   if (authHeader !== 'Bearer seed-safemed-2024') {
@@ -137,51 +208,38 @@ export async function GET(request: Request) {
     )
     const tables = tablesRes.rows.map((r: any) => r.tablename)
 
-    // Get schema of site_settings to understand Payload's column naming
-    let siteSettingsSchema: any[] = []
+    // Check page_content schema if it exists
+    let pageContentSchema: any = 'table does not exist'
     try {
       const res = await pool.query(
-        `SELECT column_name, data_type, is_nullable FROM information_schema.columns WHERE table_name = 'site_settings' ORDER BY ordinal_position`
+        `SELECT column_name, data_type, is_nullable FROM information_schema.columns WHERE table_name = 'page_content' ORDER BY ordinal_position`
+      )
+      pageContentSchema = res.rows
+    } catch { /* table doesn't exist */ }
+
+    // Check job_positions schema if it exists
+    let jobPositionsSchema: any = 'table does not exist'
+    try {
+      const res = await pool.query(
+        `SELECT column_name, data_type, is_nullable FROM information_schema.columns WHERE table_name = 'job_positions' ORDER BY ordinal_position`
+      )
+      jobPositionsSchema = res.rows
+    } catch { /* table doesn't exist */ }
+
+    // Check site_settings for reference
+    let siteSettingsSchema: any = null
+    try {
+      const res = await pool.query(
+        `SELECT column_name, data_type FROM information_schema.columns WHERE table_name = 'site_settings' ORDER BY ordinal_position`
       )
       siteSettingsSchema = res.rows
-    } catch (e: any) {
-      siteSettingsSchema = [{ error: e.message }]
-    }
-
-    // Get schema of team_members to understand collection naming
-    let teamMembersSchema: any[] = []
-    try {
-      const res = await pool.query(
-        `SELECT column_name, data_type, is_nullable FROM information_schema.columns WHERE table_name = 'team_members' ORDER BY ordinal_position`
-      )
-      teamMembersSchema = res.rows
-    } catch (e: any) {
-      teamMembersSchema = [{ error: e.message }]
-    }
-
-    // Check page_content and job_positions
-    let pageContentStatus = 'unknown'
-    try {
-      const res = await pool.query('SELECT count(*) FROM page_content')
-      pageContentStatus = `ok (${res.rows[0].count} rows)`
-    } catch (e: any) {
-      pageContentStatus = `error: ${e.message}`
-    }
-
-    let jobPositionsStatus = 'unknown'
-    try {
-      const res = await pool.query('SELECT count(*) FROM job_positions')
-      jobPositionsStatus = `ok (${res.rows[0].count} rows)`
-    } catch (e: any) {
-      jobPositionsStatus = `error: ${e.message}`
-    }
+    } catch { /* */ }
 
     return NextResponse.json({
       tables,
+      pageContentSchema,
+      jobPositionsSchema,
       siteSettingsSchema,
-      teamMembersSchema,
-      pageContent: pageContentStatus,
-      jobPositions: jobPositionsStatus,
     })
   } catch (e: any) {
     return NextResponse.json({ error: e.message }, { status: 500 })
@@ -189,7 +247,6 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
-  // Simple auth check
   const authHeader = request.headers.get('authorization')
   if (authHeader !== 'Bearer seed-safemed-2024') {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
@@ -199,50 +256,214 @@ export async function POST(request: Request) {
 
   try {
     const payload = await getPayload({ config })
+    const pool = (payload.db as any).pool
 
-    // Seed PageContent — only fill empty fields
+    // Step 1: Create tables if they don't exist
     try {
-      let current: any = null
-      try {
-        current = await payload.findGlobal({ slug: 'page-content' })
-      } catch {
-        // Global doesn't exist yet
-      }
-
-      const merged: any = { ...SEED_DATA }
-      if (current) {
-        for (const [key, seedValue] of Object.entries(SEED_DATA)) {
-          const cmsValue = (current as any)[key]
-          const hasValue = cmsValue !== null && cmsValue !== undefined && cmsValue !== '' &&
-            !(Array.isArray(cmsValue) && cmsValue.length === 0)
-          if (hasValue) {
-            merged[key] = cmsValue
-          }
-        }
-        results.push('PageContent: merged with existing data')
-      } else {
-        results.push('PageContent: creating from scratch')
-      }
-
-      await payload.updateGlobal({ slug: 'page-content', data: merged })
-      results.push('PageContent: saved successfully')
+      await pool.query(CREATE_PAGE_CONTENT_SQL)
+      results.push('page_content table: created or already exists')
     } catch (e: any) {
-      results.push(`PageContent ERROR: ${e.message}`)
+      results.push(`page_content table ERROR: ${e.message}`)
     }
 
-    // Seed JobPositions
     try {
-      const existing = await payload.find({ collection: 'job-positions', limit: 1 })
-      if (existing.totalDocs === 0) {
+      await pool.query(CREATE_JOB_POSITIONS_SQL)
+      results.push('job_positions table: created or already exists')
+    } catch (e: any) {
+      results.push(`job_positions table ERROR: ${e.message}`)
+    }
+
+    // Step 2: Seed PageContent — only fill empty fields
+    try {
+      // Check if any row exists in page_content
+      const countRes = await pool.query('SELECT count(*) as cnt FROM page_content')
+      const rowCount = parseInt(countRes.rows[0].cnt)
+
+      if (rowCount === 0) {
+        // Insert a new row with all seed data
+        const columns: string[] = []
+        const values: any[] = []
+        const placeholders: string[] = []
+        let idx = 1
+
+        const fieldMap: Record<string, { col: string; type: 'text' | 'json' }> = {
+          sobreHeroLabel: { col: 'sobre_hero_label', type: 'text' },
+          sobreHeroTitle: { col: 'sobre_hero_title', type: 'text' },
+          sobreHeroDescription: { col: 'sobre_hero_description', type: 'text' },
+          sobreMissionTitle: { col: 'sobre_mission_title', type: 'text' },
+          sobreMissionText1: { col: 'sobre_mission_text1', type: 'text' },
+          sobreMissionText2: { col: 'sobre_mission_text2', type: 'text' },
+          sobreStats: { col: 'sobre_stats', type: 'json' },
+          sobreValuesHeading: { col: 'sobre_values_heading', type: 'text' },
+          sobreValues: { col: 'sobre_values', type: 'json' },
+          sobreVersionsHeading: { col: 'sobre_versions_heading', type: 'text' },
+          sobreVersionsSubheading: { col: 'sobre_versions_subheading', type: 'text' },
+          sobreVersions: { col: 'sobre_versions', type: 'json' },
+          sobreTeamTitle: { col: 'sobre_team_title', type: 'text' },
+          sobreTeamText1: { col: 'sobre_team_text1', type: 'text' },
+          sobreTeamText2: { col: 'sobre_team_text2', type: 'text' },
+          sobreCtaTitle: { col: 'sobre_cta_title', type: 'text' },
+          sobreCtaText: { col: 'sobre_cta_text', type: 'text' },
+          carreirasHeroTitle: { col: 'carreiras_hero_title', type: 'text' },
+          carreirasHeroDescription: { col: 'carreiras_hero_description', type: 'text' },
+          carreirasCultureHeading: { col: 'carreiras_culture_heading', type: 'text' },
+          carreirasCultureSubheading: { col: 'carreiras_culture_subheading', type: 'text' },
+          carreirasCultureValues: { col: 'carreiras_culture_values', type: 'json' },
+          carreirasBenefitsTitle: { col: 'carreiras_benefits_title', type: 'text' },
+          carreirasBenefits: { col: 'carreiras_benefits', type: 'json' },
+          carreirasPositionsHeading: { col: 'carreiras_positions_heading', type: 'text' },
+          carreirasCtaTitle: { col: 'carreiras_cta_title', type: 'text' },
+          carreirasCtaText: { col: 'carreiras_cta_text', type: 'text' },
+          carreirasCtaEmail: { col: 'carreiras_cta_email', type: 'text' },
+          contactoHeroTitle: { col: 'contacto_hero_title', type: 'text' },
+          contactoHeroDescription: { col: 'contacto_hero_description', type: 'text' },
+          contactoPartnerName: { col: 'contacto_partner_name', type: 'text' },
+          contactoPartnerDescription: { col: 'contacto_partner_description', type: 'text' },
+          contactoPartnerWebsite: { col: 'contacto_partner_website', type: 'text' },
+          contactoPartnerEmail: { col: 'contacto_partner_email', type: 'text' },
+          contactoPartnerPhone: { col: 'contacto_partner_phone', type: 'text' },
+          contactoMapEmbed: { col: 'contacto_map_embed', type: 'text' },
+          blogHeroTitle: { col: 'blog_hero_title', type: 'text' },
+          blogHeroDescription: { col: 'blog_hero_description', type: 'text' },
+          blogCtaTitle: { col: 'blog_cta_title', type: 'text' },
+          blogCtaText: { col: 'blog_cta_text', type: 'text' },
+        }
+
+        for (const [key, { col, type }] of Object.entries(fieldMap)) {
+          const val = (SEED_DATA as any)[key]
+          if (val !== undefined && val !== null) {
+            columns.push(`"${col}"`)
+            if (type === 'json') {
+              values.push(JSON.stringify(val))
+              placeholders.push(`$${idx}::jsonb`)
+            } else {
+              values.push(val)
+              placeholders.push(`$${idx}`)
+            }
+            idx++
+          }
+        }
+
+        await pool.query(
+          `INSERT INTO page_content (${columns.join(', ')}) VALUES (${placeholders.join(', ')})`,
+          values
+        )
+        results.push('PageContent: seeded from scratch')
+      } else {
+        // Update only NULL/empty fields
+        results.push(`PageContent: ${rowCount} row(s) exist, updating empty fields only`)
+        const currentRes = await pool.query('SELECT * FROM page_content LIMIT 1')
+        const current = currentRes.rows[0]
+
+        const fieldMap: Record<string, { col: string; type: 'text' | 'json' }> = {
+          sobreHeroLabel: { col: 'sobre_hero_label', type: 'text' },
+          sobreHeroTitle: { col: 'sobre_hero_title', type: 'text' },
+          sobreHeroDescription: { col: 'sobre_hero_description', type: 'text' },
+          sobreMissionTitle: { col: 'sobre_mission_title', type: 'text' },
+          sobreMissionText1: { col: 'sobre_mission_text1', type: 'text' },
+          sobreMissionText2: { col: 'sobre_mission_text2', type: 'text' },
+          sobreStats: { col: 'sobre_stats', type: 'json' },
+          sobreValuesHeading: { col: 'sobre_values_heading', type: 'text' },
+          sobreValues: { col: 'sobre_values', type: 'json' },
+          sobreVersionsHeading: { col: 'sobre_versions_heading', type: 'text' },
+          sobreVersionsSubheading: { col: 'sobre_versions_subheading', type: 'text' },
+          sobreVersions: { col: 'sobre_versions', type: 'json' },
+          sobreTeamTitle: { col: 'sobre_team_title', type: 'text' },
+          sobreTeamText1: { col: 'sobre_team_text1', type: 'text' },
+          sobreTeamText2: { col: 'sobre_team_text2', type: 'text' },
+          sobreCtaTitle: { col: 'sobre_cta_title', type: 'text' },
+          sobreCtaText: { col: 'sobre_cta_text', type: 'text' },
+          carreirasHeroTitle: { col: 'carreiras_hero_title', type: 'text' },
+          carreirasHeroDescription: { col: 'carreiras_hero_description', type: 'text' },
+          carreirasCultureHeading: { col: 'carreiras_culture_heading', type: 'text' },
+          carreirasCultureSubheading: { col: 'carreiras_culture_subheading', type: 'text' },
+          carreirasCultureValues: { col: 'carreiras_culture_values', type: 'json' },
+          carreirasBenefitsTitle: { col: 'carreiras_benefits_title', type: 'text' },
+          carreirasBenefits: { col: 'carreiras_benefits', type: 'json' },
+          carreirasPositionsHeading: { col: 'carreiras_positions_heading', type: 'text' },
+          carreirasCtaTitle: { col: 'carreiras_cta_title', type: 'text' },
+          carreirasCtaText: { col: 'carreiras_cta_text', type: 'text' },
+          carreirasCtaEmail: { col: 'carreiras_cta_email', type: 'text' },
+          contactoHeroTitle: { col: 'contacto_hero_title', type: 'text' },
+          contactoHeroDescription: { col: 'contacto_hero_description', type: 'text' },
+          contactoPartnerName: { col: 'contacto_partner_name', type: 'text' },
+          contactoPartnerDescription: { col: 'contacto_partner_description', type: 'text' },
+          contactoPartnerWebsite: { col: 'contacto_partner_website', type: 'text' },
+          contactoPartnerEmail: { col: 'contacto_partner_email', type: 'text' },
+          contactoPartnerPhone: { col: 'contacto_partner_phone', type: 'text' },
+          contactoMapEmbed: { col: 'contacto_map_embed', type: 'text' },
+          blogHeroTitle: { col: 'blog_hero_title', type: 'text' },
+          blogHeroDescription: { col: 'blog_hero_description', type: 'text' },
+          blogCtaTitle: { col: 'blog_cta_title', type: 'text' },
+          blogCtaText: { col: 'blog_cta_text', type: 'text' },
+        }
+
+        const updates: string[] = []
+        const vals: any[] = []
+        let idx = 1
+
+        for (const [key, { col, type }] of Object.entries(fieldMap)) {
+          const currentVal = current[col]
+          const isEmpty = currentVal === null || currentVal === undefined || currentVal === ''
+          if (isEmpty) {
+            const seedVal = (SEED_DATA as any)[key]
+            if (seedVal !== undefined && seedVal !== null) {
+              if (type === 'json') {
+                updates.push(`"${col}" = $${idx}::jsonb`)
+                vals.push(JSON.stringify(seedVal))
+              } else {
+                updates.push(`"${col}" = $${idx}`)
+                vals.push(seedVal)
+              }
+              idx++
+            }
+          }
+        }
+
+        if (updates.length > 0) {
+          vals.push(current.id)
+          await pool.query(
+            `UPDATE page_content SET ${updates.join(', ')} WHERE id = $${idx}`,
+            vals
+          )
+          results.push(`PageContent: updated ${updates.length} empty fields`)
+        } else {
+          results.push('PageContent: all fields already have values, nothing to update')
+        }
+      }
+    } catch (e: any) {
+      results.push(`PageContent seed ERROR: ${e.message}`)
+    }
+
+    // Step 3: Seed JobPositions
+    try {
+      const countRes = await pool.query('SELECT count(*) as cnt FROM job_positions')
+      const jobCount = parseInt(countRes.rows[0].cnt)
+
+      if (jobCount === 0) {
         for (const pos of JOB_POSITIONS) {
-          await payload.create({ collection: 'job-positions', data: pos as any })
+          await pool.query(
+            `INSERT INTO job_positions (title, department, location, type, description, responsibilities, requirements, active, "order")
+             VALUES ($1, $2, $3, $4, $5, $6::jsonb, $7::jsonb, $8, $9)`,
+            [
+              pos.title,
+              pos.department,
+              pos.location,
+              pos.type,
+              pos.description,
+              JSON.stringify(pos.responsibilities),
+              JSON.stringify(pos.requirements),
+              pos.active,
+              pos.order,
+            ]
+          )
           results.push(`JobPosition created: ${pos.title}`)
         }
       } else {
-        results.push(`JobPositions: ${existing.totalDocs} already exist, skipping`)
+        results.push(`JobPositions: ${jobCount} already exist, skipping`)
       }
     } catch (e: any) {
-      results.push(`JobPositions ERROR: ${e.message}`)
+      results.push(`JobPositions seed ERROR: ${e.message}`)
     }
 
     return NextResponse.json({ ok: true, results })
