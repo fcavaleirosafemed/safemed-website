@@ -53,25 +53,24 @@ export async function GET(request: Request) {
       results.drizzleTables = { error: e.message }
     }
 
-    // Test the admin RSC render by fetching it server-side
+    // Test the admin by calling RootPage directly
     try {
-      const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL || process.env.RAILWAY_PUBLIC_DOMAIN
-        ? `https://${process.env.RAILWAY_PUBLIC_DOMAIN}`
-        : 'http://localhost:3000'
-      const adminRes = await fetch(`${baseUrl}/admin`, {
-        headers: { 'RSC': '1' },
+      const { RootPage } = await import('@payloadcms/next/views')
+      const { importMap } = await import('@/app/(payload)/admin/importMap')
+      const result = await RootPage({
+        config,
+        importMap,
+        params: Promise.resolve({ segments: [] }),
+        searchParams: Promise.resolve({}),
       })
-      results.adminRSC = {
-        status: adminRes.status,
-        ok: adminRes.ok,
-        contentType: adminRes.headers.get('content-type'),
-      }
-      if (!adminRes.ok) {
-        const text = await adminRes.text()
-        results.adminRSCBody = text.substring(0, 1000)
-      }
+      results.adminRender = { ok: true, type: typeof result }
     } catch (e: any) {
-      results.adminRSC = { error: e.message }
+      results.adminRender = {
+        error: e.message,
+        stack: e.stack?.split('\n').slice(0, 10),
+        name: e.name,
+        digest: (e as any).digest,
+      }
     }
 
     return NextResponse.json(results)
