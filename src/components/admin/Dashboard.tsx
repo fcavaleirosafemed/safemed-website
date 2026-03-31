@@ -5,6 +5,7 @@ const Dashboard = () => {
     <div style={{ padding: '20px' }}>
       <h2>Bem-vindo ao Safemed CMS</h2>
       <p>Utilize o menu lateral para gerir o conteúdo do site.</p>
+      {/* v2 - custom dashboard */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '16px', marginTop: '20px' }}>
         <a href="/admin/globals/page-content" style={{ padding: '20px', background: '#f5f5f5', borderRadius: '8px', textDecoration: 'none', color: 'inherit' }}>
           <h3 style={{ margin: '0 0 8px' }}>Conteúdo das Páginas</h3>
@@ -29,6 +30,14 @@ const Dashboard = () => {
         <a href="/admin/globals/navigation" style={{ padding: '20px', background: '#f5f5f5', borderRadius: '8px', textDecoration: 'none', color: 'inherit' }}>
           <h3 style={{ margin: '0 0 8px' }}>Navegação</h3>
           <p style={{ margin: 0, fontSize: '14px', opacity: 0.7 }}>Menu de navegação do site</p>
+        </a>
+        <a href="/admin/collections/services" style={{ padding: '20px', background: '#f5f5f5', borderRadius: '8px', textDecoration: 'none', color: 'inherit' }}>
+          <h3 style={{ margin: '0 0 8px' }}>Módulos</h3>
+          <p style={{ margin: 0, fontSize: '14px', opacity: 0.7 }}>Gerir módulos/serviços</p>
+        </a>
+        <a href="/admin/collections/industries" style={{ padding: '20px', background: '#f5f5f5', borderRadius: '8px', textDecoration: 'none', color: 'inherit' }}>
+          <h3 style={{ margin: '0 0 8px' }}>Setores</h3>
+          <p style={{ margin: 0, fontSize: '14px', opacity: 0.7 }}>Gerir setores/indústrias</p>
         </a>
       </div>
     </div>
