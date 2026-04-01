@@ -14,32 +14,68 @@ export const PageContent: GlobalConfig = {
           label: 'Sobre Nós',
           fields: [
             // Hero
-            { name: 'sobreHeroLabel', type: 'text', label: 'Label', defaultValue: 'Sobre Nós' },
-            { name: 'sobreHeroTitle', type: 'text', label: 'Título', defaultValue: 'A Safemed Solutions' },
-            { name: 'sobreHeroDescription', type: 'textarea', label: 'Descrição' },
-            { name: 'sobreHeroImage', type: 'upload', relationTo: 'media', label: 'Imagem Hero' },
+            {
+              type: 'collapsible',
+              label: 'Secção Hero',
+              fields: [
+                { name: 'sobreHeroLabel', type: 'text', label: 'Label', defaultValue: 'Sobre Nós' },
+                { name: 'sobreHeroTitle', type: 'text', label: 'Título', defaultValue: 'A Safemed Solutions' },
+                { name: 'sobreHeroDescription', type: 'textarea', label: 'Descrição' },
+                { name: 'sobreHeroImage', type: 'upload', relationTo: 'media', label: 'Imagem Hero' },
+              ],
+            },
             // Mission
-            { name: 'sobreMissionTitle', type: 'text', label: 'Título Missão', defaultValue: 'Tornar a SST simples, eficiente e acessível' },
-            { name: 'sobreMissionText1', type: 'textarea', label: 'Missão - Parágrafo 1' },
-            { name: 'sobreMissionText2', type: 'textarea', label: 'Missão - Parágrafo 2' },
-            { name: 'sobreMissionImage', type: 'upload', relationTo: 'media', label: 'Imagem Missão' },
+            {
+              type: 'collapsible',
+              label: 'Secção Missão',
+              fields: [
+                { name: 'sobreMissionTitle', type: 'text', label: 'Título Missão', defaultValue: 'Tornar a SST simples, eficiente e acessível' },
+                { name: 'sobreMissionText1', type: 'textarea', label: 'Missão - Parágrafo 1' },
+                { name: 'sobreMissionText2', type: 'textarea', label: 'Missão - Parágrafo 2' },
+                { name: 'sobreMissionImage', type: 'upload', relationTo: 'media', label: 'Imagem Missão' },
+              ],
+            },
             // Stats — stored as JSON to avoid separate tables
             { name: 'sobreStats', type: 'json', label: 'Estatísticas (JSON array: [{value, label}])' },
             // Values
-            { name: 'sobreValuesHeading', type: 'text', label: 'Título Valores', defaultValue: 'O que nos define' },
-            { name: 'sobreValues', type: 'json', label: 'Valores (JSON array: [{icon, title, description}])' },
+            {
+              type: 'collapsible',
+              label: 'Secção Valores',
+              fields: [
+                { name: 'sobreValuesHeading', type: 'text', label: 'Título Valores', defaultValue: 'O que nos define' },
+                { name: 'sobreValues', type: 'json', label: 'Valores (JSON array: [{icon, title, description}])' },
+              ],
+            },
             // Versions
-            { name: 'sobreVersionsHeading', type: 'text', label: 'Título Versões', defaultValue: 'Uma solução para cada necessidade' },
-            { name: 'sobreVersionsSubheading', type: 'text', label: 'Subtítulo Versões' },
-            { name: 'sobreVersions', type: 'json', label: 'Versões (JSON array: [{name, description, features:[{text}], highlight}])' },
+            {
+              type: 'collapsible',
+              label: 'Secção Versões',
+              fields: [
+                { name: 'sobreVersionsHeading', type: 'text', label: 'Título Versões', defaultValue: 'Uma solução para cada necessidade' },
+                { name: 'sobreVersionsSubheading', type: 'text', label: 'Subtítulo Versões' },
+                { name: 'sobreVersions', type: 'json', label: 'Versões (JSON array: [{name, description, features:[{text}], highlight}])' },
+              ],
+            },
             // Team section
-            { name: 'sobreTeamTitle', type: 'text', label: 'Título Equipa', defaultValue: 'Pessoas que fazem a diferença' },
-            { name: 'sobreTeamText1', type: 'textarea', label: 'Equipa - Parágrafo 1' },
-            { name: 'sobreTeamText2', type: 'textarea', label: 'Equipa - Parágrafo 2' },
-            { name: 'sobreTeamImage', type: 'upload', relationTo: 'media', label: 'Imagem Equipa' },
+            {
+              type: 'collapsible',
+              label: 'Secção Equipa',
+              fields: [
+                { name: 'sobreTeamTitle', type: 'text', label: 'Título Equipa', defaultValue: 'Pessoas que fazem a diferença' },
+                { name: 'sobreTeamText1', type: 'textarea', label: 'Equipa - Parágrafo 1' },
+                { name: 'sobreTeamText2', type: 'textarea', label: 'Equipa - Parágrafo 2' },
+                { name: 'sobreTeamImage', type: 'upload', relationTo: 'media', label: 'Imagem Equipa' },
+              ],
+            },
             // CTA
-            { name: 'sobreCtaTitle', type: 'text', label: 'Título CTA', defaultValue: 'Quer conhecer melhor o Safemed?' },
-            { name: 'sobreCtaText', type: 'textarea', label: 'Texto CTA' },
+            {
+              type: 'collapsible',
+              label: 'Secção CTA',
+              fields: [
+                { name: 'sobreCtaTitle', type: 'text', label: 'Título CTA', defaultValue: 'Quer conhecer melhor o Safemed?' },
+                { name: 'sobreCtaText', type: 'textarea', label: 'Texto CTA' },
+              ],
+            },
           ],
         },
         {
