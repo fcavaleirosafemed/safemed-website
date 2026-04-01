@@ -304,7 +304,24 @@ export async function POST(request: Request) {
       results.push(`job_positions table ERROR: ${e.message}`)
     }
 
-    // Step 1.5: Fix payload_locked_documents_rels missing job_positions_id column
+    // Step 1.5a: Add prefix column to media table (required by S3 storage plugin)
+    try {
+      const colCheck = await pool.query(
+        `SELECT column_name FROM information_schema.columns WHERE table_name = 'media' AND column_name = 'prefix'`
+      )
+      if (colCheck.rows.length === 0) {
+        await pool.query(
+          `ALTER TABLE "media" ADD COLUMN "prefix" varchar`
+        )
+        results.push('media: added prefix column for S3 storage')
+      } else {
+        results.push('media: prefix column already exists')
+      }
+    } catch (e: any) {
+      results.push(`media prefix fix ERROR: ${e.message}`)
+    }
+
+    // Step 1.5b: Fix payload_locked_documents_rels missing job_positions_id column
     try {
       const colCheck = await pool.query(
         `SELECT column_name FROM information_schema.columns WHERE table_name = 'payload_locked_documents_rels' AND column_name = 'job_positions_id'`
