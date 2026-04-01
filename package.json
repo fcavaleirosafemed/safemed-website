@@ -18,6 +18,7 @@
     "@payloadcms/next": "^3.80.0",
     "@payloadcms/plugin-seo": "^3.80.0",
     "@payloadcms/richtext-lexical": "^3.80.0",
+    "@payloadcms/storage-s3": "^3.80.0",
     "ai": "^6.0.140",
     "cross-env": "^7.0.3",
     "framer-motion": "^12.6.0",
