@@ -116,6 +116,31 @@ export async function GET(request: Request) {
       results.dbPool = { error: e.message }
     }
 
+    // Check media table schema vs Drizzle expectation
+    try {
+      const pool = (payload.db as any).pool
+      const mediaSchemaRes = await pool.query(
+        `SELECT column_name, data_type FROM information_schema.columns WHERE table_name = 'media' ORDER BY ordinal_position`
+      )
+      results.mediaDbColumns = mediaSchemaRes.rows.map((r: any) => r.column_name)
+
+      const drizzleMediaSchema = (payload.db as any).tables?.media
+      if (drizzleMediaSchema) {
+        results.mediaDrizzleColumns = Object.keys(drizzleMediaSchema)
+      }
+
+      // Find missing columns
+      const dbCols = new Set(results.mediaDbColumns)
+      const drizzleCols = results.mediaDrizzleColumns || []
+      // Drizzle uses camelCase, DB uses snake_case - need to convert
+      results.mediaMissingInDb = drizzleCols.filter((c: string) => {
+        const snake = c.replace(/[A-Z]/g, (m: string) => '_' + m.toLowerCase())
+        return !dbCols.has(snake) && !dbCols.has(c)
+      })
+    } catch (e: any) {
+      results.mediaSchemaCheck = { error: e.message }
+    }
+
     // Try to render the dashboard view
     try {
       const { RootPage } = await import('@payloadcms/next/views')
