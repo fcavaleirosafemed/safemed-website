@@ -28,8 +28,8 @@ out/
 # Claude
 .claude/
 
-# Payload auto-generated
-src/app/(payload)/admin/importMap.js
+# Payload auto-generated (committed to avoid build failures on Railway)
+# src/app/(payload)/admin/importMap.js
 
 # TypeScript
 *.tsbuildinfo
