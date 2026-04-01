@@ -8,7 +8,7 @@ export const dynamic = 'force-dynamic'
 async function getContent() {
   try {
     const payload = await getPayload({ config })
-    return await payload.findGlobal({ slug: 'page-content' }) as any
+    return await payload.findGlobal({ slug: 'page-content', depth: 2 }) as any
   } catch {
     return null
   }

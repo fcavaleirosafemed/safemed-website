@@ -9,7 +9,7 @@ async function getContent() {
   try {
     const payload = await getPayload({ config })
     const [content, postsResult] = await Promise.all([
-      payload.findGlobal({ slug: 'page-content' }),
+      payload.findGlobal({ slug: 'page-content', depth: 2 }),
       payload.find({
         collection: 'blog-posts',
         sort: '-publishedAt',

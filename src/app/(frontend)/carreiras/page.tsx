@@ -9,7 +9,7 @@ async function getContent() {
   try {
     const payload = await getPayload({ config })
     const [content, positionsResult] = await Promise.all([
-      payload.findGlobal({ slug: 'page-content' }),
+      payload.findGlobal({ slug: 'page-content', depth: 2 }),
       payload.find({
         collection: 'job-positions',
         where: { active: { equals: true } },
