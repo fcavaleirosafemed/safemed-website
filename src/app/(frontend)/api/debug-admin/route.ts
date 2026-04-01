@@ -141,6 +141,39 @@ export async function GET(request: Request) {
       results.mediaSchemaCheck = { error: e.message }
     }
 
+    // Test R2/S3 connection
+    try {
+      const { S3Client, PutObjectCommand } = await import('@aws-sdk/client-s3')
+      const r2Endpoint = process.env.R2_ENDPOINT || 'NOT SET'
+      const r2Bucket = process.env.R2_BUCKET || 'NOT SET'
+      const r2KeyId = process.env.R2_ACCESS_KEY_ID ? `${process.env.R2_ACCESS_KEY_ID.substring(0, 8)}...` : 'NOT SET'
+      const r2Secret = process.env.R2_SECRET_ACCESS_KEY ? `${process.env.R2_SECRET_ACCESS_KEY.substring(0, 8)}...` : 'NOT SET'
+
+      results.r2Config = { endpoint: r2Endpoint, bucket: r2Bucket, accessKeyId: r2KeyId, secretAccessKey: r2Secret }
+
+      if (r2Endpoint !== 'NOT SET' && r2Bucket !== 'NOT SET') {
+        const client = new S3Client({
+          endpoint: r2Endpoint,
+          credentials: {
+            accessKeyId: process.env.R2_ACCESS_KEY_ID || '',
+            secretAccessKey: process.env.R2_SECRET_ACCESS_KEY || '',
+          },
+          region: 'auto',
+          forcePathStyle: true,
+        })
+        const cmd = new PutObjectCommand({
+          Bucket: r2Bucket,
+          Key: '_test/connection-test.txt',
+          Body: `test from server at ${new Date().toISOString()}`,
+          ContentType: 'text/plain',
+        })
+        const putResult = await client.send(cmd)
+        results.r2Connection = { ok: true, statusCode: putResult.$metadata.httpStatusCode }
+      }
+    } catch (e: any) {
+      results.r2Connection = { error: e.message, name: e.name, stack: e.stack?.split('\n').slice(0, 3) }
+    }
+
     // Try to render the dashboard view
     try {
       const { RootPage } = await import('@payloadcms/next/views')
